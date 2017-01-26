@@ -1,0 +1,2296 @@
+unit uMainForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  uPrintersMonitor, Vcl.Imaging.JPEG, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinVS2010,
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, Vcl.ComCtrls, Winapi.ShlObj,
+  cxShellCommon, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage,
+  cxEdit, cxTextEdit, cxCalendar, cxContainer, Vcl.ExtCtrls, cxSpinEdit,
+  Vcl.StdCtrls, AdvEdit, AdvEdBtn, cxMaskEdit, cxDropDownEdit,
+  CoolTrayIcon, cxButtons, cxMemo, cxGridLevel, cxGridCustomTableView,
+  cxGridTableView, cxGridBandedTableView, AbBase, AbBrowse, AbZBrows, AbZipper,
+  cxClasses, cxGridCustomView, cxGrid, cxShellControls, cxShellListView, dxGDIPlusClasses,
+  cxImage, cxLabel, cxPC, dxBevel, OverbyteIcsSmtpProt, SHChangeNotify,
+  AdvSmoothTimeLine, cxTrackBar, Vcl.ImgList, cxNavigator, dxCore, cxDateUtils,
+  cxListView;
+
+type
+  TIndicatorData = class
+                   private
+                     FType          : Integer;
+                     FData          : String;
+                     FRecordIndex   : Integer;
+                     FSubrecordIndex: Integer;
+                   protected
+                   public
+                     property IndicatorType: Integer read FType write FType;
+                     property Data: String read FData write FData;
+                     property RecordIndex: Integer read FRecordIndex write FRecordIndex;
+                     property SubrecordIndex: Integer read FSubrecordIndex write FSubrecordIndex;
+                   end;
+
+  TfrmMain = class(TForm)
+    bevelHeader: TdxBevel;
+    imgLogo: TcxImage;
+    pcPages: TcxPageControl;
+    imgTab2Background: TcxImage;
+    imgTab3Background: TcxImage;
+    imgTab4Background: TcxImage;
+    imgTab5Background: TcxImage;
+    imgTab6Background: TcxImage;
+    imgTab7Background: TcxImage;
+    imgTab8Background: TcxImage;
+    imgTab9Background: TcxImage;
+    imgTab1Background: TcxImage;
+    pageHome: TcxTabSheet;
+    pageScreenshots: TcxTabSheet;
+    pageKeylogger: TcxTabSheet;
+    pageInternet: TcxTabSheet;
+    pageApplications: TcxTabSheet;
+    pagePrinters: TcxTabSheet;
+    pageClipboard: TcxTabSheet;
+    pageFiles: TcxTabSheet;
+    pageTimeline: TcxTabSheet;
+    imgTab1Glyph: TcxImage;
+    imgTab2Glyph: TcxImage;
+    imgTab3Glyph: TcxImage;
+    imgTab4Glyph: TcxImage;
+    imgTab5Glyph: TcxImage;
+    imgTab9Glyph: TcxImage;
+    imgTab7Glyph: TcxImage;
+    imgTab6Glyph: TcxImage;
+    labTab1Caption: TcxLabel;
+    labTab2Caption: TcxLabel;
+    labTab3Caption: TcxLabel;
+    labTab4Caption: TcxLabel;
+    labTab5Caption: TcxLabel;
+    labTab6Caption: TcxLabel;
+    labTab7Caption: TcxLabel;
+    labTab8Caption: TcxLabel;
+    labTab9Caption: TcxLabel;
+    btExit: TcxButton;
+    btSettings: TcxButton;
+    imgHeader: TcxImage;
+    btStartStopMonitoring: TcxButton;
+    gridKeyloggerLevel: TcxGridLevel;
+    gridKeylogger: TcxGrid;
+    gridKeyloggerTable: TcxGridBandedTableView;
+    gridKeyloggerApp: TcxGridBandedColumn;
+    gridKeyloggerDateTime: TcxGridBandedColumn;
+    memoKeylogger: TcxMemo;
+    gridSites: TcxGrid;
+    gridSitesTable: TcxGridBandedTableView;
+    gridSitesSite: TcxGridBandedColumn;
+    gridSitesDateTime: TcxGridBandedColumn;
+    gridSitesLevel: TcxGridLevel;
+    shlScreenshots: TcxShellListView;
+    gridApps: TcxGrid;
+    gridAppsTable: TcxGridBandedTableView;
+    gridAppsProcess: TcxGridBandedColumn;
+    gridAppsCaption: TcxGridBandedColumn;
+    gridAppsLevel: TcxGridLevel;
+    gridAppsDateTime: TcxGridBandedColumn;
+    gridPrinters: TcxGrid;
+    gridPrintersTable: TcxGridBandedTableView;
+    gridPrintersDocument: TcxGridBandedColumn;
+    gridPrintersPages: TcxGridBandedColumn;
+    gridPrintersDateTime: TcxGridBandedColumn;
+    gridPrintersLevel: TcxGridLevel;
+    gridPrintersPrinter: TcxGridBandedColumn;
+    timerWindowActivateShot: TTimer;
+    imgTab8Glyph: TcxImage;
+    gridKeyloggerSublevel: TcxGridLevel;
+    gridKeyloggerSubtable: TcxGridBandedTableView;
+    gridKeyloggerSubtableCaption: TcxGridBandedColumn;
+    gridKeyloggerId: TcxGridBandedColumn;
+    gridKeyloggerSubtableHwnd: TcxGridBandedColumn;
+    gridKeyloggerSubtableData: TcxGridBandedColumn;
+    lbHomeHeader: TcxLabel;
+    lbHome2Caption: TcxLabel;
+    imgHome2Glyph: TcxImage;
+    lbHome2Count: TcxLabel;
+    imgHome3Glyph: TcxImage;
+    lbHome3Count: TcxLabel;
+    lbHome3Caption: TcxLabel;
+    imgHome5Glyph: TcxImage;
+    lbHome5Count: TcxLabel;
+    lbHome5Caption: TcxLabel;
+    lbHome4Caption: TcxLabel;
+    lbHome4Count: TcxLabel;
+    imgHome4Glyph: TcxImage;
+    imgHome6Glyph: TcxImage;
+    lbHome6Count: TcxLabel;
+    lbHome6Caption: TcxLabel;
+    lbHome7Caption: TcxLabel;
+    lbHome7Count: TcxLabel;
+    imgHome7Glyph: TcxImage;
+    imgHome8Glyph: TcxImage;
+    lbHome8Count: TcxLabel;
+    lbHome8Caption: TcxLabel;
+    lbHome9Caption: TcxLabel;
+    lbHome9Count: TcxLabel;
+    imgHome9Glyph: TcxImage;
+    TrayIcon: TCoolTrayIcon;
+    btTrialBuy: TcxButton;
+    lbTrial: TcxLabel;
+    timerTrialRefresh: TTimer;
+    deDatePicker: TcxDateEdit;
+    timerReportMail: TTimer;
+    gridClipboard: TcxGrid;
+    gridClipboardTable: TcxGridBandedTableView;
+    gridClipboardApp: TcxGridBandedColumn;
+    gridClipboardDateTime: TcxGridBandedColumn;
+    gridClipboardLevel: TcxGridLevel;
+    memoClipboard: TcxMemo;
+    gridClipboardData: TcxGridBandedColumn;
+    ShellChangeNotify: TSHChangeNotify;
+    gridFiles: TcxGrid;
+    gridFilesTable: TcxGridBandedTableView;
+    gridFilesAction: TcxGridBandedColumn;
+    gridFilesPath: TcxGridBandedColumn;
+    gridFilesLevel: TcxGridLevel;
+    gridFilesDateTime: TcxGridBandedColumn;
+    Timeline: TAdvSmoothTimeLine;
+    pmSites: TPopupMenu;
+    miSitesOpen: TMenuItem;
+    N1: TMenuItem;
+    miSitesIgnore: TMenuItem;
+    miSitesDelete: TMenuItem;
+    pmScreenshots: TPopupMenu;
+    miScreenshotsOpen: TMenuItem;
+    MenuItem2: TMenuItem;
+    miScreenshotsDelete: TMenuItem;
+    imgManual: TcxImage;
+    TimelineTrackbar: TcxTrackBar;
+    Shape1: TShape;
+    cxLabel1: TcxLabel;
+    Shape2: TShape;
+    cxLabel2: TcxLabel;
+    Shape3: TShape;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    Shape4: TShape;
+    cxLabel5: TcxLabel;
+    Shape5: TShape;
+    ilTimeline: TcxImageList;
+    Image1: TImage;
+    btSaveReport: TcxButton;
+    btRootFolder: TcxButton;
+    timerStartup: TTimer;
+    gridKeyloggerSubtableDateTime: TcxGridBandedColumn;
+    procedure FormCreate(Sender: TObject);
+    procedure imgTabBackgroundClick(Sender: TObject);
+    procedure btExitClick(Sender: TObject);
+    procedure btSettingsClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure timerWindowActivateShotTimer(Sender: TObject);
+    procedure btStartStopMonitoringClick(Sender: TObject);
+    procedure shlScreenshotsCompare(Sender: TObject; AItem1, AItem2: TcxShellFolder; var ACompare: Integer);
+    procedure gridKeyloggerSubtableFocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+    procedure pageHomeShow(Sender: TObject);
+    procedure TrayIconClick(Sender: TObject);
+    procedure TrayIconStartup(Sender: TObject; var ShowMainForm: Boolean);
+    procedure FormShow(Sender: TObject);
+    procedure btTrialBuyClick(Sender: TObject);
+    procedure timerTrialRefreshTimer(Sender: TObject);
+    procedure deDatePickerPropertiesChange(Sender: TObject);
+    procedure gridKeyloggerTableFocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+    procedure timerReportMailTimer(Sender: TObject);
+    procedure gridClipboardTableFocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+    procedure gridSitesTableCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+    procedure ShellChangeNotifyCreate(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyEndSessionQuery(Sender: TObject; var CanEndSession: Boolean);
+    procedure ShellChangeNotifyDelete(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyDriveAdd(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyDriveRemoved(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyMediaInserted(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyMediaRemoved(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyMkDir(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyRenameFolder(Sender: TObject; Flags: Cardinal; Path1, Path2: string);
+    procedure ShellChangeNotifyRenameItem(Sender: TObject; Flags: Cardinal; Path1, Path2: string);
+    procedure ShellChangeNotifyRmDir(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure ShellChangeNotifyUpdateItem(Sender: TObject; Flags: Cardinal; Path1: string);
+    procedure miSitesOpenClick(Sender: TObject);
+    procedure miSitesIgnoreClick(Sender: TObject);
+    procedure miSitesDeleteClick(Sender: TObject);
+    procedure miScreenshotsOpenClick(Sender: TObject);
+    procedure miScreenshotsDeleteClick(Sender: TObject);
+    procedure imgManualClick(Sender: TObject);
+    procedure TimelineTrackbarPropertiesChange(Sender: TObject);
+    procedure btSaveReportClick(Sender: TObject);
+    procedure TimelineIndicatorClick(Sender: TObject; indicator: TAdvSmoothTimeLineBarIndicator);
+    procedure shlScreenshotsCurrentFolderChanged(Sender: TcxCustomShellListView);
+    procedure btRootFolderClick(Sender: TObject);
+    procedure timerStartupTimer(Sender: TObject);
+  private
+    FHidden            : Boolean;
+    FMonitoring        : Boolean;
+    FShowHideHotkeyAtom: DWORD;
+
+    procedure LoadGUI;
+    procedure ConfigureControls;
+    procedure SetTabBackgrounds;
+    procedure SetTabGlyphs;
+    procedure SetTabCaptions;
+    procedure ReconfigureTabs;
+    procedure SetPageBackgrounds;
+    procedure UpdateKeylogData;
+    procedure StartModules(const AShowPopup: Boolean = TRUE);
+    procedure StopModules;
+    procedure SiteTrackerNewHost(Sender: TObject; const AHost, AResource, AReferer: String);
+    procedure ScreenshotterNewScreenshot(Sender: TObject; const AScreenshot: TJPEGImage);
+    procedure WindowActivate(Sender: TObject; const APID: DWORD; const ACaption: String);
+    procedure PrinterJobDone(Sender: TObject; const AJobInformation: TPrinterJobInformation);
+    procedure KeyloggerNewKey(Sender: TObject);
+    procedure ShowKeylogData(const ADataId: Integer = -1; const ACaption: String = '');
+    procedure UpdateHomeCaptions;
+    procedure StartStopMonitor(const AShowPopup: Boolean = TRUE);
+    procedure ShowGecko;
+    procedure HideGecko;
+    procedure ShowTrialGUI(const AShow: Boolean);
+    procedure EnableHotkeys;
+    procedure DisableHotkeys;
+    procedure ApplySettings;
+    procedure TrialExpiryEvent(Sender: TObject);
+    procedure ShowFiltered(const AShowPopup: Boolean = TRUE);
+    procedure ClearFilters;
+    procedure MailerSendDone(Sender: TObject; SenderThread: TObject; const ASuccess: Boolean);
+    procedure ResetLogs;
+    procedure SaveLogs;
+    procedure LoadLogs;
+    procedure ClipboardChange(Sender: TObject);
+    procedure AddFilesAction(const AAction, APath: String; const ADateTime: TDateTime);
+    procedure SetupTimeline(const ADateFrom, ADateTo: TDateTime);
+    procedure FillTimeline(const ADateFrom, ADateTo: TDateTime);
+    procedure ShowGeckoUnlock;
+    procedure SetupTimelineFirstEvent;
+    procedure ClearDataController(const ADataController: TcxGridDataController);
+    procedure SetRunAsAdmin;
+    procedure SetDateFilter(const ADate: TDate; const AShowPopup: Boolean = TRUE);
+    procedure LoadKeylog;
+    procedure SaveKeylog;
+    procedure WMHotkey(var Msg : TWMHotkey); message WM_HOTKEY;
+  protected
+    procedure WMSysCommand(var AMessage: TWMSysCommand); message WM_SYSCOMMAND;
+  public
+    procedure CloseGecko(const APopup: Boolean = TRUE);
+    procedure CreateReportFile(const AFile: String; const AScreenshots, AKeystrokes, AWebsites, AApplications, APrinters, AClipboard, AFiles: Boolean);
+  end;
+
+var
+  frmMain: TfrmMain;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  {$IFDEF DEBUG} JclDebug, {$ENDIF}
+  Vcl.Clipbrd, System.DateUtils, Generics.Collections, System.Win.Registry,
+  uCommon, uResources, uDataModel, uKeylogger, uServiceManager, uSettingsForm,
+  uFirstStartForm, uSerialValidator, uTrialRegisterForm, uUnlockForm, uMailSender,
+  uStartup, uIgnoreItemAdd, uSaveReportForm;
+
+
+procedure TfrmMain.btExitClick(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  CloseGecko;
+end;
+
+procedure TfrmMain.btSaveReportClick(Sender: TObject);
+//
+// Run save report form
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if TfrmSaveReport.RunModal = mrOk then
+    MessageDlg('Report successfully saved!', mtInformation, [mbOk], 0);
+end;
+
+procedure TfrmMain.btSettingsClick(Sender: TObject);
+//
+// Run settings form
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  DisableHotkeys;
+  if TfrmSettings.RunModal = mrOk then
+  begin
+    ApplySettings;
+    DataModel.SaveSettings;
+  end;
+  EnableHotkeys;
+end;
+
+procedure TfrmMain.StartStopMonitor(const AShowPopup: Boolean = TRUE);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if FMonitoring then
+  begin
+    StopModules;
+    SetDateFilter(Now, FALSE);
+    UpdateHomeCaptions;
+    btStartStopMonitoring.Caption := 'START MONITORING';
+  end
+  else
+  begin
+    if (not AShowPopup) or
+       (MessageDlg(Format('PLEASE NOTE: Gecko Monitor is about to start monitoring and go into ''Hidden Mode''.'#13'Please remember to use %s to reopen Gecko Monitor and view the logs.',
+                          [ShortcutToText(DataModel.Settings.General.ShowHideHotkey)]),
+                   mtInformation, [mbOk, mbCancel], 0) = mrOk) then
+    begin
+      DataModel.InitSession;
+      StartModules(AShowPopup);
+      UpdateHomeCaptions;
+      btStartStopMonitoring.Caption := 'STOP MONITORING';
+      HideGecko;
+    end;
+  end;
+end;
+
+procedure TfrmMain.btStartStopMonitoringClick(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  StartStopMonitor;
+end;
+
+procedure TfrmMain.btTrialBuyClick(Sender: TObject);
+//
+// Opens trial register window
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  case TfrmTrialRegister.RunModal of
+    mrOk   : begin
+               timerTrialRefresh.Enabled := FALSE;
+               DataModel.TrialUnlocker.Terminate;
+               ShowTrialGui(FALSE);
+               DataModel.SaveSettings;
+               btStartStopMonitoring.Enabled := TRUE;
+               btStartStopMonitoring.OnClick := btStartStopMonitoringClick;
+               btStartStopMonitoring.Visible := TRUE;
+             end;
+    mrClose: Close;
+  end;
+end;
+
+procedure TfrmMain.SetRunAsAdmin;
+var
+  reg: TRegistry;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  reg := TRegistry.Create;
+  try
+    reg.RootKey := KEY_WRITE;
+    if reg.OpenKey('SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers', TRUE) then
+    begin
+      reg.WriteString(ParamStr(0), 'RUNASADMIN');
+      reg.CloseKey;
+    end;
+  finally
+    reg.Free;
+  end;
+end;
+
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if FMonitoring then
+    StopModules;
+
+  SaveLogs;
+
+  if DataModel.TrialUnlocker.ThreadID <> 0 then
+    DataModel.TrialUnlocker.Terminate;
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  LoadGUI;
+  ConfigureControls;
+  ApplySettings;
+
+  SetRunAsAdmin;
+
+  FMonitoring := FALSE;
+  if DataModel.Settings.General.FirstTime then
+  begin
+    if TfrmFirstStart.RunModal = mrOk then
+    begin
+      DataModel.Settings.General.FirstTime := FALSE;
+      DataModel.SaveSettings;
+    end
+  end
+  else
+    if DataModel.Settings.General.AutoStartMonitor then
+      StartStopMonitor(FALSE);
+
+  UpdateHomeCaptions;
+
+  if not TSerialValidator.Validate(DataModel.Settings.General.Serial) then
+  begin
+    DataModel.TrialUnlocker.OnTrialExpiry := TrialExpiryEvent;
+    DataModel.TrialUnlocker.Start;
+    timerTrialRefresh.Enabled := TRUE;
+    ShowTrialGUI(TRUE);
+  end;
+
+  timerStartup.Enabled := TRUE;
+
+  LoadLogs;
+
+  SetDateFilter(Now, FALSE);
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if DataModel.Settings.General.FirstTime then
+    CloseGecko(FALSE);
+end;
+
+procedure TfrmMain.ConfigureControls;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  // set shell control screenshots path
+  shlScreenshots.Root.CustomPath := DataModel.ScreenshotsPath;
+
+  deDatePicker.Properties.OnChange := deDatePickerPropertiesChange;
+end;
+
+procedure TfrmMain.deDatePickerPropertiesChange(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ShowFiltered(TRUE);
+end;
+
+procedure TfrmMain.StartModules(const AShowPopup: Boolean = TRUE);
+//
+// Start modules
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  DataModel.SiteTracker.OnNewHost := SiteTrackerNewHost;
+  DataModel.Screenshotter.OnNewScreenhot := ScreenshotterNewScreenshot;
+  DataModel.WindowFocusNotifier.OnWindowActivate := WindowActivate;
+  DataModel.PrintersMonitor.OnJobDone := PrinterJobDone;
+  DataModel.ClipboardMonitor.OnChange := ClipboardChange;
+
+  DataModel.Screenshotter.IntervalTimer.Enabled := TRUE;
+  DataModel.Keylogger := TKeylogger.Create;
+  DataModel.Keylogger.OnNewKey := KeyloggerNewKey;
+  DataModel.Keylogger.EmulateBackspace := DataModel.Settings.Keylogger.EmulateBackspace;
+  LoadKeylog;
+  DataModel.Keylogger.Start;
+  DataModel.Sniffer.Start;
+  DataModel.WindowFocusNotifier.Hook;
+  DataModel.ClipboardMonitor.Start;
+  ShellChangeNotify.Execute;
+
+  if DataModel.IsSpoolerRunning then
+    DataModel.PrintersMonitor.Start
+  else
+    if AShowPopup then
+      MessageDlg('Print Spooler service is not running. Printer Monitoring will be disabled.', mtInformation, [mbOk], 0);
+
+  FMonitoring := TRUE;
+end;
+
+procedure TfrmMain.StopModules;
+//
+// Stop modules
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  DataModel.SiteTracker.OnNewHost := nil;
+  DataModel.Screenshotter.OnNewScreenhot := nil;
+  DataModel.WindowFocusNotifier.OnWindowActivate := nil;
+  DataModel.PrintersMonitor.OnJobDone := nil;
+  DataModel.Keylogger.OnNewKey := nil;
+  DataModel.ClipboardMonitor.OnChange := nil;
+
+  ShellChangeNotify.Stop;
+  DataModel.ClipboardMonitor.Stop;
+  DataModel.PrintersMonitor.Stop;
+  DataModel.WindowFocusNotifier.Unhook;
+  DataModel.Sniffer.Stop;
+  DataModel.Keylogger.Terminate;
+  DataModel.Keylogger.WaitFor;
+  SaveKeylog;
+  FreeAndNil(DataModel.Keylogger);
+  DataModel.Screenshotter.IntervalTimer.Enabled := FALSE;
+
+  FMonitoring := FALSE;
+end;
+
+procedure TfrmMain.TimelineTrackbarPropertiesChange(Sender: TObject);
+begin
+  Timeline.Range.RangeFrom := Timeline.Range.MinimumRange + (Timeline.Range.MaximumRange - Timeline.Range.MinimumRange) * (TimelineTrackbar.Position / 100);
+  Timeline.Range.RangeTo := Timeline.Range.MinimumRange + (Timeline.Range.MaximumRange - Timeline.Range.MinimumRange) * ((TimelineTrackbar.Position + 10) / 100);
+  Timeline.Resize;
+end;
+
+procedure TfrmMain.gridKeyloggerSubtableFocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  UpdateKeylogData;
+  ShowKeylogData;
+end;
+
+procedure TfrmMain.gridKeyloggerTableFocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  UpdateKeylogData;
+  ShowKeylogData;
+
+  if (gridKeyloggerTable.DataController.FocusedRecordIndex >= 0) and
+     (gridKeyloggerTable.DataController.FocusedRecordIndex < gridKeyloggerTable.DataController.RecordCount) then
+    gridKeyloggerTable.ViewData.Records[gridKeyloggerTable.DataController.FilteredIndexByRecordIndex[gridKeyloggerTable.DataController.FocusedRecordIndex]].Expand(FALSE);
+end;
+
+procedure TfrmMain.gridSitesTableCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+//
+// Open site in browser on double click
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ShellOpen(ACellViewInfo.Text);
+end;
+
+procedure TfrmMain.imgManualClick(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ShellOpen('http://www.geckomonitor.com/manual.html');
+end;
+
+procedure TfrmMain.imgTabBackgroundClick(Sender: TObject);
+//
+// Select appropriate page when user clicks on some tab
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  pcPages.ActivePageIndex := StrToIntDef((Sender as TComponent).Name[7], 1) - 1; // xxxTabXBackground
+  ReconfigureTabs;
+end;
+
+procedure TfrmMain.WMHotkey(var Msg: TWMHotkey);
+begin
+  if msg.HotKey = FShowHideHotkeyAtom then
+    if FHidden then
+      ShowGeckoUnlock
+    else
+      HideGecko;
+end;
+
+procedure TfrmMain.WMSysCommand(var AMessage: TWMSysCommand);
+//
+// Here we detect when user clicks on "X" button
+//
+begin
+  if AMessage.CmdType = SC_CLOSE then
+    CloseGecko
+  else
+    inherited;
+end;
+
+procedure TfrmMain.ShowGeckoUnlock;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if TfrmUnlock.RunModal = mrOk then
+  begin
+    if FMonitoring then
+      btStartStopMonitoring.Click;
+
+    deDatePicker.Date := Now;
+    ShowGecko;
+  end;
+end;
+
+procedure TfrmMain.SetTabBackgrounds;
+//
+// Sets tab backgrounds
+//
+var
+  C1  : Integer;
+  cap : TcxLabel;
+  img : TcxImage;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to pcPages.PageCount - 1 do
+  begin
+    img := FindComponent(Format('imgTab%dBackground', [C1 + 1])) as TcxImage;
+    cap := FindComponent(Format('labTab%dCaption', [C1 + 1])) as TcxLabel;
+    cap.Left := img.Left;
+    cap.Transparent := FALSE;
+    cap.Transparent := TRUE;
+  end;
+end;
+
+procedure TfrmMain.SetTabCaptions;
+//
+// Sets tab captions
+//
+var
+  C1  : Integer;
+  img : TcxImage;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to pcPages.PageCount - 1 do
+  begin
+    img := FindComponent(Format('imgTab%dBackground', [C1 + 1])) as TcxImage;
+    if C1 <> pcPages.ActivePageIndex then
+      PNGResToImage(img, RES_TAB_BACKGROUND_NORMAL)
+    else
+      PNGResToImage(img, RES_TAB_BACKGROUND_FOCUSED)
+  end;
+end;
+
+procedure TfrmMain.SetTabGlyphs;
+//
+// Sets tab glyphs
+//
+var
+  C1            : Integer;
+  imgBackground : TcxImage;
+  imgGlyph      : TcxImage;
+  imgHome       : TcxImage;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to pcPages.PageCount - 1 do
+  begin
+    imgBackground := FindComponent(Format('imgTab%dBackground', [C1 + 1])) as TcxImage;
+    imgGlyph := FindComponent(Format('imgTab%dGlyph', [C1 + 1])) as TcxImage;
+    imgHome := FindComponent(Format('imgHome%dGlyph', [C1 + 1])) as TcxImage;
+    imgGlyph.Left := imgBackground.Left + (imgBackground.Width - imgGlyph.Width) div 2;
+
+    case C1 of
+      0: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_HOME)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_HOME);
+         end;
+
+      1: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_SCREENSHOTS)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_SCREENSHOTS);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_SCREENSHOTS);
+         end;
+
+      2: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_KEYLOGGER)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_KEYLOGGER);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_KEYLOGGER);
+         end;
+
+      3: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_INTERNET)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_INTERNET);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_INTERNET);
+         end;
+
+
+      4: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_APPLICATIONS)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_APPLICATIONS);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_APPLICATIONS);
+         end;
+
+      5: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_PRINTERS)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_PRINTERS);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_PRINTERS);
+         end;
+
+      6: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_CLIPBOARD)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_CLIPBOARD);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_CLIPBOARD);
+         end;
+
+      7: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_FILES)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_FILES);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_FILES);
+         end;
+
+      8: begin
+           if C1 <> pcPages.ActivePageIndex then
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_BLACK_TIMELINE)
+           else
+             PNGResToImage(imgGlyph, RES_TAB_GLYPH_WHITE_TIMELINE);
+
+           if Assigned(imgHome) then
+             PNGResToImage(imgHome, RES_TAB_GLYPH_BLACK_TIMELINE);
+         end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.shlScreenshotsCompare(Sender: TObject; AItem1, AItem2: TcxShellFolder; var ACompare: Integer);
+begin
+  ACompare := -CompareStr(AItem1.DisplayName, AItem2.DisplayName);
+end;
+
+procedure TfrmMain.shlScreenshotsCurrentFolderChanged(Sender: TcxCustomShellListView);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  btRootFolder.Visible := not (IncludeTrailingPathDelimiter(shlScreenshots.Root.CurrentPath) = IncludeTrailingPathDelimiter(DataModel.ScreenshotsPath));
+  if btRootFolder.Visible then
+  begin
+    shlScreenshots.ThumbnailOptions.Height := 153;
+    shlScreenshots.ThumbnailOptions.Width := 153;
+  end
+  else
+  begin
+    shlScreenshots.ThumbnailOptions.Height := 90;
+    shlScreenshots.ThumbnailOptions.Width := 90;
+  end;
+end;
+
+procedure TfrmMain.ReconfigureTabs;
+//
+// Sets tabs backgrounds, glyphs and captions
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  SetTabBackgrounds;
+  SetTabGlyphs;
+  SetTabCaptions;
+  imgHeader.Refresh;
+end;
+
+procedure TfrmMain.SetDateFilter(const ADate: TDate; const AShowPopup: Boolean);
+var
+  onch: TNotifyEvent;
+begin
+  onch := deDatePicker.Properties.OnChange;
+  deDatePicker.Properties.OnChange := nil;
+  deDatePicker.Date := RecodeTime(ADate, 0, 0, 0, 0);
+  ShowFiltered(AShowPopup);
+  deDatePicker.Properties.OnChange := onch;
+end;
+
+procedure TfrmMain.SetPageBackgrounds;
+//
+// Sets backgrounds for page control
+//
+var
+  C1 : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  SetBackground(pageHome, RES_BACKGROUND_HOME);
+  for C1 := 1 to pcPages.PageCount - 1 do
+    SetBackground(pcPages.Pages[C1], RES_BACKGROUND_PAGE);
+end;
+
+procedure TfrmMain.LoadGUI;
+//
+// Configures GUI elements (loads images, etc..)
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  self.Color := clBlack;
+  SetBackground(self, RES_BACKGROUND_MAIN);
+
+  pcPages.ActivePageIndex := 0;
+  ReconfigureTabs;
+  SetPageBackgrounds;
+end;
+
+procedure TfrmMain.pageHomeShow(Sender: TObject);
+begin
+  UpdateHomeCaptions;
+end;
+
+procedure TfrmMain.UpdateKeylogData;
+var
+  C1, C2, C3: Integer;
+  recid     : Integer;
+  subrecid  : Integer;
+  kdata     : TKeylogger.TKeyloggerData;
+  subtable  : TcxCustomDataController;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  gridKeyloggerTable.DataController.BeginFullUpdate;
+
+  for C1 := 0 to TKeylogger.Data.Count - 1 do
+  begin
+    kdata := TKeylogger.Data[C1];
+
+    recid := -1;
+    for C2 := 0 to gridKeyloggerTable.DataController.RecordCount - 1 do
+      if kdata.Id = gridKeyloggerTable.DataController.GetValue(C2, 2) then
+      begin
+        recid := C2;
+        Break;
+      end;
+
+    if recid = -1 then
+    begin
+      recid := gridKeyloggerTable.DataController.AppendRecord;
+      Inc(DataModel.Session.KeystrokesLogged);
+    end;
+
+    gridKeyloggerTable.DataController.SetValue(recid, 0, kdata.PName);
+    gridKeyloggerTable.DataController.SetValue(recid, 1, kdata.DateTime);
+    gridKeyloggerTable.DataController.SetValue(recid, 2, kdata.Id);
+
+    subtable := gridKeyloggerTable.DataController.GetDetailDataController(recid, 0);
+    subtable.BeginFullUpdate;
+    for C2 := 0 to kdata.Keystrokes.Count - 1 do
+    begin
+      subrecid := -1;
+
+      for C3 := 0 to subtable.RecordCount - 1 do
+        if kdata.Keystrokes[C2].Caption = subtable.GetValue(C3, 0) then
+        begin
+          subrecid := C3;
+          Break;
+        end;
+
+      if subrecid = -1 then
+        subrecid := subtable.AppendRecord;
+
+      subtable.SetValue(subrecid, 0, kdata.Keystrokes[C2].Caption);
+      subtable.SetValue(subrecid, 1, kdata.Keystrokes[C2].WindowHandle);
+      subtable.SetValue(subrecid, 2, kdata.Keystrokes[C2].Data);
+      subtable.SetValue(subrecid, 3, kdata.Keystrokes[C2].DateTime);
+    end;
+    subtable.EndFullUpdate;
+  end;
+
+  gridKeyloggerTable.DataController.EndFullUpdate;
+end;
+
+procedure TfrmMain.SiteTrackerNewHost(Sender: TObject; const AHost, AResource, AReferer: String);
+//
+// New host is received from site tracker module
+//
+var
+  recid : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if not DataModel.MatchesWebIgnoreList(AHost + AResource) then
+  begin
+    if AReferer = '' then
+    begin
+      gridSitesTable.DataController.BeginFullUpdate;
+      try
+        recid := gridSitesTable.DataController.AppendRecord;
+        gridSitesTable.DataController.SetValue(recid, 0, AHost + AResource);
+        gridSitesTable.DataController.SetValue(recid, 1, Now);
+      finally
+        gridSitesTable.DataController.EndFullUpdate;
+        Inc(DataModel.Session.WebsitesLogged);
+      end;
+
+      UpdateHomeCaptions;
+    end;
+  end;
+end;
+
+procedure TfrmMain.ScreenshotterNewScreenshot(Sender: TObject; const AScreenshot: TJPEGImage);
+//
+// New screenshot is received from screenshotter module
+// We save image to disk in thread, so there is no GUI stuttering
+//
+var
+  locTime : TSystemTime;
+  fname   : String;
+  dir     : String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  GetLocalTime(locTime);
+
+  // make dir path
+  dir := DataModel.ScreenshotsPath + Format('%d-%.*d-%.*d', [locTime.wYear, 2, locTime.wMonth, 2, locTime.wDay]);
+  if not DirectoryExists(dir) then
+    ForceDirectories(dir);
+
+  // make file path
+  fname := Format('%.*dh %.*dm %.*ds - %s', [2, locTime.wHour, 2, locTime.wMinute, 2, locTime.wSecond, SafeEncode(GetWindowCaption(GetForegroundWindow))]);
+  if Length(fname) > 150 then
+    fname := Copy(fname, 1, 150);
+  fname := fname + '.jpg';
+
+  AScreenshot.SaveToFile(IncludeTrailingPathDelimiter(dir) + fname);
+
+  Inc(DataModel.Session.ScreenshotsTaken);
+  UpdateHomeCaptions;
+end;
+
+procedure TfrmMain.WindowActivate(Sender: TObject; const APID: DWORD; const ACaption: String);
+//
+// New window is focused
+//
+const
+  ALTERNATIVE_KEYLOGGER_PROCESSES: Array[1..1] of String = ('excel.exe');
+var
+  recid               : Integer;
+  pname               : String;
+  C1                  : Integer;
+  active_proc_name    : String;
+  alternative_approach: Boolean;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if (ACaption <> '') and
+     (APID <> GetCurrentProcessId) then
+  begin
+    pname := GetProcessName(APID);
+    if (gridAppsTable.DataController.GetValue(gridAppsTable.DataController.RecordCount - 1, 0) <> pname) or
+       (gridAppsTable.DataController.GetValue(gridAppsTable.DataController.RecordCount - 1, 1) <> ACaption) then
+    begin
+      gridAppsTable.DataController.BeginFullUpdate;
+      try
+        recid := gridAppsTable.DataController.AppendRecord;
+        gridAppsTable.DataController.SetValue(recid, 0, pname);
+        gridAppsTable.DataController.SetValue(recid, 1, ACaption);
+        gridAppsTable.DataController.SetValue(recid, 2, Now);
+      finally
+        gridAppsTable.DataController.EndFullUpdate;
+        Inc(DataModel.Session.AppsLogged);
+      end;
+
+      if (FMonitoring) and
+         (DataModel.Settings.Screenshots.ScreenshotOnFocus.Enabled) then
+        timerWindowActivateShot.Enabled := TRUE;
+
+      UpdateHomeCaptions;
+    end;
+  end;
+
+  alternative_approach := FALSE;
+  active_proc_name := LowerCase(GetProcessName(APID));
+  for C1 := Low(ALTERNATIVE_KEYLOGGER_PROCESSES) to High(ALTERNATIVE_KEYLOGGER_PROCESSES) do
+    if active_proc_name = ALTERNATIVE_KEYLOGGER_PROCESSES[C1] then
+    begin
+      alternative_approach := TRUE;
+      Break;
+    end;
+  TKeylogger.AlternativeApproach := alternative_approach;
+end;
+
+procedure TfrmMain.CreateReportFile(const AFile: String; const AScreenshots, AKeystrokes, AWebsites, AApplications, APrinters, AClipboard, AFiles: Boolean);
+var
+  C1, C2   : Integer;
+  fs       : TStreamWriter;
+  dateStr  : String;
+  subtable : TcxCustomDataController;
+  ab_zipper: TAbZipper;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ab_zipper := TAbZipper.Create(self);
+  try
+    ab_zipper.OpenArchive(AFile);
+
+    ab_zipper.BaseDirectory := DataModel.SelfPath;
+    if AKeystrokes then
+    begin
+      fs := TStreamWriter.Create(DataModel.SelfPath + 'keystrokes_report.txt', FALSE);
+      try
+        fs.WriteLine('    DATE              |    PROCESS             |    CAPTION');
+        fs.WriteLine('-------------------------------------------------------------');
+        for C1 := 0 to gridKeyloggerTable.DataController.RecordCount - 1 do
+        begin
+          DateTimeToString(dateStr, 'DD-MM-YYYY  HH:MM:SS', TDateTime(gridKeyloggerTable.DataController.GetValue(C1, 1)));
+
+          subtable := gridKeyloggerTable.DataController.GetDetailDataController(C1, 0);
+          if Assigned(subtable) then
+          begin
+            for C2 := 0 to subtable.RecordCount - 1 do
+            begin
+              fs.WriteLine(Format(' %s| %s| %s', [AlignString(dateStr, 21),
+                                              AlignString(gridKeyloggerTable.DataController.GetValue(C1, 0), 23),
+                                              subtable.GetValue(C2, 0)]));
+              fs.WriteLine;
+              fs.WriteLine(String(subtable.GetValue(C2, 2)));
+              fs.WriteLine;
+            end;
+          end;
+        end;
+      finally
+        fs.Free;
+        ab_zipper.AddFiles('keystrokes_report.txt', faAnyFile);
+        ab_zipper.Save;
+        DeleteFile(DataModel.SelfPath + 'keystrokes_report.txt');
+      end;
+    end;
+
+    if AWebsites then
+    begin
+      fs := TStreamWriter.Create(DataModel.SelfPath + 'websites_report.txt', FALSE);
+      try
+        fs.WriteLine('    DATE              |    WEBSITE');
+        fs.WriteLine('-------------------------------------------------------------');
+
+        for C1 := 0 to gridSitesTable.DataController.RecordCount - 1 do
+        begin
+          DateTimeToString(dateStr, 'DD-MM-YYYY  HH:MM:SS', TDateTime(gridSitesTable.DataController.GetValue(C1, 1)));
+          fs.WriteLine(Format(' %s| %s', [AlignString(dateStr, 21),
+                                          gridSitesTable.DataController.GetValue(C1, 0)]));
+        end;
+      finally
+        fs.Free;
+        ab_zipper.AddFiles('websites_report.txt', faAnyFile);
+        ab_zipper.Save;
+        DeleteFile(DataModel.SelfPath + 'websites_report.txt');
+      end;
+    end;
+
+    if AApplications then
+    begin
+      fs := TStreamWriter.Create(DataModel.SelfPath + 'applications_report.txt', FALSE);
+      try
+        fs.WriteLine('    DATE              |    PROCESS             |    CAPTION');
+        fs.WriteLine('-------------------------------------------------------------');
+
+        for C1 := 0 to gridAppsTable.DataController.RecordCount - 1 do
+        begin
+          DateTimeToString(dateStr, 'DD-MM-YYYY  HH:MM:SS', TDateTime(gridAppsTable.DataController.GetValue(C1, 2)));
+          fs.WriteLine(Format(' %s| %s| %s', [AlignString(dateStr, 21),
+                                              AlignString(gridAppsTable.DataController.GetValue(C1, 0), 23),
+                                              gridAppsTable.DataController.GetValue(C1, 1)]));
+        end;
+      finally
+        fs.Free;
+        ab_zipper.AddFiles('applications_report.txt', faAnyFile);
+        ab_zipper.Save;
+        DeleteFile(DataModel.SelfPath + 'applications_report.txt');
+      end;
+    end;
+
+    if APrinters then
+    begin
+      fs := TStreamWriter.Create(DataModel.SelfPath + 'printers_report.txt', FALSE);
+      try
+        fs.WriteLine('    DATE              |    DOCUMENT                         | COPIES |    PRINTER NAME');
+        fs.WriteLine('-------------------------------------------------------------------------------------------');
+
+        for C1 := 0 to gridPrintersTable.DataController.RecordCount - 1 do
+        begin
+          DateTimeToString(dateStr, 'DD-MM-YYYY  HH:MM:SS', TDateTime(gridPrintersTable.DataController.GetValue(C1, 3)));
+          fs.WriteLine(Format(' %s| %s| %s| %s', [AlignString(dateStr, 21),
+                                                  AlignString(gridPrintersTable.DataController.GetValue(C1, 0), 23),
+                                                  AlignString(gridPrintersTable.DataController.GetValue(C1, 1), 7),
+                                                  gridPrintersTable.DataController.GetValue(C1, 2)]));
+        end;
+      finally
+        fs.Free;
+        ab_zipper.AddFiles('printers_report.txt', faAnyFile);
+        ab_zipper.Save;
+        DeleteFile(DataModel.SelfPath + 'printers_report.txt');
+      end;
+    end;
+
+    if AClipboard then
+    begin
+      fs := TStreamWriter.Create(DataModel.SelfPath + 'clipboard_report.txt', FALSE);
+      try
+        fs.WriteLine('    DATE              |    PROCESS');
+        fs.WriteLine('-------------------------------------------------------------');
+        for C1 := 0 to gridClipboardTable.DataController.RecordCount - 1 do
+        begin
+          DateTimeToString(dateStr, 'DD-MM-YYYY  HH:MM:SS', TDateTime(gridClipboardTable.DataController.GetValue(C1, 1)));
+          fs.WriteLine(Format(' %s| %s', [AlignString(dateStr, 21),
+                                          gridClipboardTable.DataController.GetValue(C1, 0)]));
+          fs.WriteLine;
+          fs.WriteLine(String(gridClipboardTable.DataController.GetValue(C1, 2)));
+          fs.WriteLine;
+        end;
+      finally
+        fs.Free;
+        ab_zipper.AddFiles('clipboard_report.txt', faAnyFile);
+        ab_zipper.Save;
+        DeleteFile(DataModel.SelfPath + 'clipboard_report.txt');
+      end;
+    end;
+
+    if AFiles then
+    begin
+      fs := TStreamWriter.Create(DataModel.SelfPath + 'files_report.txt', FALSE);
+      try
+        fs.WriteLine('    DATE              |    ACTION           |   PATH');
+        fs.WriteLine('-------------------------------------------------------------');
+
+        for C1 := 0 to gridFilesTable.DataController.RecordCount - 1 do
+        begin
+          DateTimeToString(dateStr, 'DD-MM-YYYY  HH:MM:SS', TDateTime(gridFilesTable.DataController.GetValue(C1, 2)));
+          fs.WriteLine(Format(' %s| %s| %s', [AlignString(dateStr, 21),
+                                              AlignString(gridFilesTable.DataController.GetValue(C1, 0), 20),
+                                              gridFilesTable.DataController.GetValue(C1, 1)]));
+        end;
+      finally
+        fs.Free;
+        ab_zipper.AddFiles('files_report.txt', faAnyFile);
+        ab_zipper.Save;
+        DeleteFile(DataModel.SelfPath + 'files_report.txt');
+      end;
+    end;
+
+    if AScreenshots then
+      ab_zipper.AddFiles('screenshots\*', faAnyFile + faDirectory);
+
+    ab_zipper.CloseArchive;
+  finally
+    ab_zipper.Free;
+  end;
+end;
+
+procedure TfrmMain.timerReportMailTimer(Sender: TObject);
+var
+  reportFile: String;
+  sslType   : TSmtpSslType;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  reportFile := DataModel.SelfPath + 'report.zip';
+  CreateReportFile(reportFile, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
+  RenameFile(reportFile, reportFile);
+
+  case DataModel.Settings.Report.SSLType of
+    0: sslType := smtpTlsNone;
+    1: sslType := smtpTlsImplicit;
+    2: sslType := smtpTlsExplicit;
+  else
+    sslType := smtpTlsNone;
+  end;
+
+  DataModel.Mailer.Send(String(DataModel.Settings.Report.ReportRecip), String(DataModel.Settings.Report.ReportSubject), reportFile,
+          String(DataModel.Settings.Report.SMTPServer), IntToStr(DataModel.Settings.Report.SMTPPort), String(DataModel.Settings.Report.SMTPUsername),
+          String(DataModel.Settings.Report.SMTPPassword), sslType);
+end;
+
+procedure TfrmMain.timerStartupTimer(Sender: TObject);
+begin
+  if DataModel.Settings.General.StartWithWindows then
+    TStartup.Install
+  else
+    TStartup.Uninstall;
+end;
+
+procedure TfrmMain.timerTrialRefreshTimer(Sender: TObject);
+//
+// Refreshes trial time caption
+//
+var
+  remTime: DWORD;
+  h, m   : Integer;
+begin
+  remTime := DataModel.TrialUnlocker.RemainingTime;
+
+  if remTime > 0 then
+  begin
+    h := remTime div 3600;
+    m := (remTime mod 3600) div 60;
+
+    if h > 0 then
+      lbTrial.Caption := Format('In free trial mode: %dh %.*dm remaining', [h, 2, m])
+    else
+      lbTrial.Caption := Format('In free trial mode: %.*dm remaining', [2, m]);
+  end
+  else
+  begin
+    lbTrial.Caption := 'Trial period expired';
+    if not TrayIcon.IconVisible then
+      ShowGecko;
+  end;
+end;
+
+procedure TfrmMain.timerWindowActivateShotTimer(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  case DataModel.Settings.Screenshots.ScreenshotOnFocus.ScrType of
+    1: DataModel.Screenshotter.TakeScreenshot;
+    2: DataModel.Screenshotter.TakeScreenshot(GetForegroundWindow)
+  else
+    DataModel.Screenshotter.TakeScreenshot;
+  end;
+
+  timerWindowActivateShot.Enabled := FALSE;
+end;
+
+procedure TfrmMain.TrayIconClick(Sender: TObject);
+begin
+  ShowGeckoUnlock;
+end;
+
+procedure TfrmMain.TrayIconStartup(Sender: TObject; var ShowMainForm: Boolean);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  TrayIcon.Icon.Assign(Application.Icon);
+
+  if not DataModel.Settings.General.FirstTime then
+  begin
+    ShowMainForm := not DataModel.Settings.General.AutoStartMonitor;
+    TrayIcon.IconVisible := ShowMainForm;
+  end;
+end;
+
+procedure TfrmMain.PrinterJobDone(Sender: TObject; const AJobInformation: TPrinterJobInformation);
+//
+// Print job done
+//
+var
+  recid : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  gridPrintersTable.DataController.BeginFullUpdate;
+  try
+    recid := gridPrintersTable.DataController.AppendRecord;
+
+    gridPrintersTable.DataController.SetValue(recid, 0, AJobInformation.Document);
+    gridPrintersTable.DataController.SetValue(recid, 1, AJobInformation.Copies);
+    gridPrintersTable.DataController.SetValue(recid, 2, String(AJobInformation.PrinterInfo.pPrinterName));
+    gridPrintersTable.DataController.SetValue(recid, 3, Now);
+  finally
+    gridPrintersTable.DataController.EndFullUpdate;
+    Inc(DataModel.Session.PrintersLogged);
+  end;
+
+  UpdateHomeCaptions;
+end;
+
+procedure TfrmMain.KeyloggerNewKey(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  UpdateKeylogData;
+  ShowKeylogData;
+  UpdateHomeCaptions;
+end;
+
+procedure TfrmMain.ShowKeylogData(const ADataId: Integer = -1; const ACaption: String = '');
+var
+  kstrokes: TKeylogger.TKeystrokes;
+  recid   : Integer;
+  subtable: TcxCustomDataController;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if ADataId = -1 then
+  begin
+    recid := gridKeyloggerTable.DataController.FocusedRecordIndex;
+    if recid <> -1 then
+    begin
+      subtable := gridKeyloggerTable.DataController.GetDetailDataController(recid, 0);
+
+      if (Assigned(subtable)) and
+         (subtable.FocusedRecordIndex <> -1) then
+        ShowKeylogData(gridKeyloggerTable.DataController.GetValue(recid, 2), subtable.GetValue(subtable.FocusedRecordIndex, 0));
+    end;
+  end
+  else
+    if TKeylogger.GetKeystrokesByDataId(ADataId, ACaption, kstrokes) then
+      memoKeylogger.Text := kstrokes.Data
+    else
+      memoKeylogger.Clear;
+end;
+
+procedure TfrmMain.UpdateHomeCaptions;
+var
+  C1                  : Integer;
+  lblcount, lblcaption: TcxLabel;
+  timeBetween         : TDateTime;
+  timeHours, timeMins : Integer;
+  strHours, strMins   : String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  lbHome2Count.Caption := IntToStr(DataModel.Session.ScreenshotsTaken);
+  lbHome3Count.Caption := IntToStr(DataModel.Session.KeystrokesLogged);
+  lbHome4Count.Caption := IntToStr(DataModel.Session.WebsitesLogged);
+  lbHome5Count.Caption := IntToStr(DataModel.Session.AppsLogged);
+  lbHome6Count.Caption := IntToStr(DataModel.Session.PrintersLogged);
+  lbHome7Count.Caption := IntToStr(DataModel.Session.ClipboardLogged);
+  lbHome8Count.Caption := IntToStr(DataModel.Session.FilesLogged);
+  lbHome9Count.Caption := IntToStr(DataModel.Session.ScreenshotsTaken + DataModel.Session.KeystrokesLogged +
+                                   DataModel.Session.WebsitesLogged + DataModel.Session.AppsLogged +
+                                   DataModel.Session.PrintersLogged + DataModel.Session.ClipboardLogged + DataModel.Session.FilesLogged);
+
+  for C1 := 2 to 9 do
+  begin
+    lblcount := FindComponent(Format('lbHome%dCount', [C1])) as TcxLabel;
+    lblcaption := FindComponent(Format('lbHome%dCaption', [C1])) as TcxLabel;
+
+    if (Assigned(lblcount)) and
+       (Assigned(lblcaption)) then
+      lblcaption.Left := lblcount.Left + lblcount.Width + 5;
+  end;
+
+  if FMonitoring then
+  begin
+    timeBetween := Now - DataModel.Session.StartTime;
+    timeHours := Trunc(timeBetween * 24);
+    timeMins := Trunc((timeBetween * 24 * 60)) mod 60;
+
+    if timeHours = 1 then
+      strHours := 'hour'
+    else
+      strHours := 'hours';
+
+    if timeMins = 1 then
+      strMins := 'minute'
+    else
+      strMins := 'minutes';
+
+    lbHomeHeader.Caption := Format('Gecko Monitor has been monitoring for a total of %d %s %d %s', [timeHours, strHours, timeMins, strMins]);
+  end
+  else
+  begin
+    if DataModel.Session.EndTime > DataModel.Session.StartTime then
+    begin
+      timeBetween := DataModel.Session.EndTime - DataModel.Session.StartTime;
+      timeHours := Trunc(timeBetween * 24);
+      timeMins := Trunc((timeBetween * 24 * 60)) mod 60;
+
+      if timeHours = 1 then
+        strHours := 'hour'
+      else
+        strHours := 'hours';
+
+      if timeMins = 1 then
+        strMins := 'minute'
+      else
+        strMins := 'minutes';
+
+      lbHomeHeader.Caption := Format('Gecko Monitor was monitoring for %d %s %d %s', [timeHours, strHours, timeMins, strMins]);
+    end
+    else
+      lbHomeHeader.Caption := 'Gecko Monitor is not currently monitoring the system';
+  end;
+end;
+
+procedure TfrmMain.HideGecko;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  FHidden := TRUE;
+  TrayIcon.HideMainForm;
+  TrayIcon.IconVisible := DataModel.Settings.General.GeckoTray;
+  self.WindowState := wsMinimized;
+end;
+
+procedure TfrmMain.ShowGecko;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  FHidden := FALSE;
+  TrayIcon.ShowMainForm;
+  TrayIcon.IconVisible := TRUE;
+  self.WindowState := wsNormal;
+end;
+
+procedure TfrmMain.CloseGecko(const APopup: Boolean);
+//
+// Closes Gecko
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if (not APopup) or
+     (MessageDlg('Are you sure you want to exit Gecko Monitor?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    Close;
+end;
+
+procedure TfrmMain.DisableHotkeys;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  GlobalDeleteAtom(FShowHideHotkeyAtom);
+  UnregisterHotkey(Handle, FShowHideHotkeyAtom);
+end;
+
+procedure TfrmMain.EnableHotkeys;
+var
+  key      : Word;
+  modifiers: UINT;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  FShowHideHotkeyAtom := GlobalAddAtom('GECKO-SHHK-ATOM');
+  ShortCutToHotKey(DataModel.Settings.General.ShowHideHotkey, key, modifiers);
+  RegisterHotkey(Handle, FShowHideHotkeyAtom, modifiers, key);
+end;
+
+procedure TfrmMain.ApplySettings;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if DataModel.Settings.General.StartWithWindows then
+    TStartup.Install
+  else
+    TStartup.Uninstall;
+
+  TrayIcon.IconVisible := DataModel.Settings.General.GeckoTray;
+
+  timerReportMail.Interval := DataModel.Settings.Report.ReportInterval * 1000 * 60;
+  timerReportMail.Enabled := DataModel.Settings.Report.ReportMail;
+  DataModel.Mailer.OnSendDone := MailerSendDone;
+
+  DataModel.Screenshotter.IntervalTimer.Enabled := DataModel.Settings.Screenshots.ScreenshotOnInterval.Enabled;
+  DataModel.Screenshotter.IntervalTimer.Interval := DataModel.Settings.Screenshots.ScreenshotOnInterval.Interval * 1000;
+  DataModel.Screenshotter.ScreenshotMode := DataModel.Settings.Screenshots.ScreenshotOnInterval.ScrType;
+
+  DataModel.PrintersMonitor.MonitoredPrinters.Assign(DataModel.SettingsDynamic.Printers.Monitored.Items);
+  if DataModel.PrintersMonitor.Monitoring then
+  begin
+    DataModel.PrintersMonitor.Stop;
+    DataModel.PrintersMonitor.Start;
+  end;
+
+  DisableHotkeys;
+  EnableHotkeys;
+end;
+
+procedure TfrmMain.ShowTrialGUI(const AShow: Boolean);
+//
+// Shows/hides trial GUI
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  btTrialBuy.Visible := AShow;
+  lbTrial.Visible := AShow;
+end;
+
+procedure TfrmMain.TrialExpiryEvent(Sender: TObject);
+//
+// On trial expiration
+//
+var
+  showpopup: Boolean;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if FMonitoring then
+    btStartStopMonitoring.Click;
+
+  showpopup := btStartStopMonitoring.Visible;
+
+  btStartStopMonitoring.Enabled := FALSE;
+  btStartStopMonitoring.OnClick := nil;
+  btStartStopMonitoring.Visible := FALSE;
+
+  if showpopup then
+    btTrialBuy.Click;
+end;
+
+procedure TfrmMain.ClearFilters;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  shlScreenshots.Root.CustomPath := DataModel.ScreenshotsPath;
+  gridKeyloggerTable.DataController.Filter.Active := FALSE;
+  gridSitesTable.DataController.Filter.Active := FALSE;
+  gridAppsTable.DataController.Filter.Active := FALSE;
+  gridPrintersTable.DataController.Filter.Active := FALSE;
+  gridClipboardTable.DataController.Filter.Active := FALSE;
+  gridFilesTable.DataController.Filter.Active := FALSE;
+end;
+
+procedure TfrmMain.ShowFiltered(const AShowPopup: Boolean = TRUE);
+
+  procedure SetTableFilter(const ATable: TcxGridBandedTableView; const AColumn: TObject; const AOperator: TcxFilterOperatorKind; const AValue: Variant; const AName: String);
+  begin
+    ATable.DataController.Filter.BeginUpdate;
+    ATable.DataController.Filter.Root.Clear;
+    ATable.DataController.Filter.Root.AddItem(AColumn, AOperator, AValue, AName);
+    ATable.DataController.Filter.Active := TRUE;
+    ATable.DataController.Filter.EndUpdate;
+  end;
+
+var
+  dateStr: String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if deDatePicker.Date = -700000 then // is date empty?
+    ClearFilters
+  else
+  begin
+    DateTimeToString(dateStr, 'YYYY-MM-DD', deDatePicker.Date);
+
+    // Filter screenshots
+    if not DirectoryExists(DataModel.ScreenshotsPath + dateStr) then
+      ForceDirectories(DataModel.ScreenshotsPath + dateStr);
+    shlScreenshots.Root.CustomPath := DataModel.ScreenshotsPath + dateStr;
+
+    // Filter keystrokes
+    SetTableFilter(gridKeyloggerTable, gridKeyloggerDateTime, foLike, deDatePicker.Date, dateStr);
+
+    // Filter web sites
+    SetTableFilter(gridSitesTable, gridSitesDateTime, foLike, deDatePicker.Date, dateStr);
+
+    // Filter applications
+    SetTableFilter(gridAppsTable, gridAppsDateTime, foLike, deDatePicker.Date, dateStr);
+
+    // Filter printers
+    SetTableFilter(gridPrintersTable, gridPrintersDateTime, foLike, deDatePicker.Date, dateStr);
+
+    // Filter clipboard
+    SetTableFilter(gridClipboardTable, gridClipboardDateTime, foLike, deDatePicker.Date, dateStr);
+
+    // Filter files
+    SetTableFilter(gridFilesTable, gridFilesDateTime, foLike, deDatePicker.Date, dateStr);
+
+    // Setup timeline
+    SetupTimeline(RecodeTime(deDatePicker.Date, 0, 0, 0, 0), IncDay(RecodeTime(deDatePicker.Date, 0, 0, 0, 0)));
+    FillTimeline(RecodeTime(deDatePicker.Date, 0, 0, 0, 0), IncDay(RecodeTime(deDatePicker.Date, 0, 0, 0, 0)));
+  end;
+
+  if AShowPopup then
+  begin
+    if (gridKeyloggerTable.DataController.FilteredRecordCount = 0) and
+       (gridSitesTable.DataController.FilteredRecordCount = 0) and
+       (gridAppsTable.DataController.FilteredRecordCount = 0) and
+       (gridPrintersTable.DataController.FilteredRecordCount = 0) and
+       (gridClipboardTable.DataController.FilteredRecordCount = 0) and
+       (gridFilesTable.DataController.FilteredRecordCount = 0) then
+      MessageDlg('Sorry, nothing logged for this date', mtInformation, [mbOk], 0);
+  end;
+end;
+
+procedure TfrmMain.SetupTimeline(const ADateFrom, ADateTo: TDateTime);
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  Timeline.SetTimeLineRange(ADateFrom, ADateTo);
+  TimelineTrackbar.Position := 1;
+  TimelineTrackbar.Position := 0;
+
+  for C1 := 0 to Timeline.TimeLineIndicators.Count - 1 do
+    (Timeline.TimeLineIndicators[C1].ItemObject as TIndicatorData).Free;
+
+  Timeline.TimeLineIndicators.Clear;
+  ilTimeline.Clear;
+end;
+
+procedure TfrmMain.TimelineIndicatorClick(Sender: TObject; indicator : TAdvSmoothTimeLineBarIndicator);
+var
+  inddata : TIndicatorData;
+  subtable: TcxCustomDataController;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  inddata := indicator.ItemObject as TIndicatorData;
+  case inddata.IndicatorType of
+    1: ShellOpen(inddata.Data);
+
+    2: begin
+         pcPages.ActivePage := pageKeylogger;
+         gridKeyloggerTable.DataController.FocusedRecordIndex := inddata.RecordIndex;
+         gridKeyloggerTable.ViewData.Records[gridKeyloggerTable.DataController.FilteredIndexByRecordIndex[gridKeyloggerTable.DataController.FocusedRecordIndex]].Expand(FALSE);
+         subtable := gridKeyloggerTable.DataController.GetDetailDataController(gridKeyloggerTable.DataController.FocusedRecordIndex, 0);
+         if (inddata.SubrecordIndex >= 0) and
+            (inddata.SubrecordIndex < subtable.RecordCount) then
+           subtable.FocusedRecordIndex := inddata.SubrecordIndex;
+       end;
+
+    3: begin
+         pcPages.ActivePage := pageInternet;
+         gridSitesTable.DataController.FocusedRecordIndex := inddata.RecordIndex;
+         gridSitesTable.ViewData.Records[gridSitesTable.DataController.FilteredIndexByRecordIndex[gridSitesTable.DataController.FocusedRecordIndex]].Expand(FALSE);
+       end;
+
+    4: begin
+         pcPages.ActivePage := pageApplications;
+         gridAppsTable.DataController.FocusedRecordIndex := inddata.RecordIndex;
+         gridAppsTable.ViewData.Records[gridAppsTable.DataController.FilteredIndexByRecordIndex[gridAppsTable.DataController.FocusedRecordIndex]].Expand(FALSE);
+       end;
+
+    5: begin
+         pcPages.ActivePage := pagePrinters;
+         gridPrintersTable.DataController.FocusedRecordIndex := inddata.RecordIndex;
+         gridPrintersTable.ViewData.Records[gridPrintersTable.DataController.FilteredIndexByRecordIndex[gridPrintersTable.DataController.FocusedRecordIndex]].Expand(FALSE);
+       end;
+  end;
+
+  ReconfigureTabs;
+end;
+
+procedure TfrmMain.FillTimeline(const ADateFrom, ADateTo: TDateTime);
+
+  procedure AddIndicator(const ATag: Integer; const APosition: TDateTime; const AText: String; const AColor: TColor; const AAnnotationPosition: TAdvSmoothTimeLineBarAnnotationPosition; const ARecordIndex: Integer; const APicture: String = ''; const ASubrecordIndex: Integer = 0);
+  var
+    indicator: TAdvSmoothTimeLineBarIndicator;
+    inddata  : TIndicatorData;
+    C1       : Integer;
+  begin
+    for C1 := 0 to Timeline.TimeLineIndicators.Count - 1 do
+      if (Timeline.TimeLineIndicators[C1].AnnotationPosition = AAnnotationPosition) and
+         (MinutesBetween(Timeline.TimeLineIndicators[C1].Position, APosition) < 30) then
+        Exit;
+
+    indicator := Timeline.TimeLineIndicators.Add;
+    indicator.Position := APosition;
+    indicator.Annotation := AText;
+    indicator.AnnotationColor := AColor;
+    indicator.AnnotationPosition := AAnnotationPosition;
+    indicator.Fixed := TRUE;
+    inddata := TIndicatorData.Create;
+    inddata.RecordIndex := ARecordIndex;
+    inddata.SubrecordIndex := ASubrecordIndex;
+    if FileExists(APicture) then
+    begin
+      inddata.Data := APicture;
+      indicator.AnnotationImageIndex := AddToImageList(APicture, ilTimeline)
+    end
+    else
+    begin
+      indicator.AnnotationImageIndex := -1;
+    end;
+
+    inddata.IndicatorType := ATag;
+    indicator.ItemObject := TObject(inddata);
+  end;
+
+var
+  C1, C2           : Integer;
+  klogdata         : TKeylogger.TKeyloggerData;
+  kstrokes         : TKeylogger.TKeystrokes;
+  site             : String;
+  process, caption : String;
+  app              : String;
+  data             : String;
+  datetim          : TDateTime;
+  files            : TStringList;
+  doc, printer     : String;
+  pages            : Integer;
+  fname            : String;
+  y, mo, d, h, m, s: Integer;
+  subtable         : TcxCustomDataController;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  Timeline.TimeLineIndicators.Clear;
+  ilTimeline.Clear;
+
+  Timeline.TimeLineIndicators.BeginUpdate;
+
+  files := TStringList.Create;
+  EnumerateFiles(DataModel.ScreenshotsPath, '*.jpg', TRUE, files);
+  for C1 := 0 to files.Count - 1 do
+    if Match(files[C1], '*????-??-??\??h ??m ??s - *') then
+    begin
+      fname := files[C1];
+      while Pos('\', fname) > 0 do
+        Delete(fname, 1, Pos('\', fname));
+      fname := Copy(files[C1], Length(files[C1]) - Length(fname) - 10, Length(fname) + 11);
+
+      y := StrToIntDef(Copy(fname, 1, 4), 0);
+      mo := StrToIntDef(Copy(fname, 6, 2), 0);
+      d := StrToIntDef(Copy(fname, 9, 2), 0);
+      h := StrToIntDef(Copy(fname, 12, 2), 0);
+      m := StrToIntDef(Copy(fname, 16, 2), 0);
+      s := StrToIntDef(Copy(fname, 20, 2), 0);
+
+      datetim := EncodeDateTime(y, mo, d, h, m, s, 0);
+
+      if (datetim >= ADateFrom) and
+         (datetim <= ADateTo) then
+        AddIndicator(1, datetim, '', clNone, apOnTop, 0, files[C1]);
+    end;
+  files.Free;
+
+  for C1 := 0 to gridKeyloggerTable.DataController.FilteredRecordCount - 1 do
+  begin
+    app := gridKeyloggerTable.DataController.GetValue(gridKeyloggerTable.DataController.FilteredRecordIndex[C1], 0);
+
+    subtable := gridKeyloggerTable.DataController.GetDetailDataController(gridKeyloggerTable.DataController.FilteredRecordIndex[C1], 0);
+    for C2 := 0 to subtable.FilteredRecordCount - 1 do
+    begin
+      caption := subtable.GetValue(subtable.FilteredRecordIndex[C2], 0);
+      data := subtable.GetValue(subtable.FilteredRecordIndex[C2], 2);
+      datetim := subtable.GetValue(subtable.FilteredRecordIndex[C2], 3);
+
+      if ((datetim) >= ADateFrom) and
+         ((datetim) <= ADateTo) and
+         (Length(data) > 6) then
+        AddIndicator(2, datetim, app + #13#10 + caption + #13#10#13#10 + data, $006EBBFF, apAtBottom, C1, '', C2);
+    end;
+  end;
+
+{
+  for C1 := 0 to TKeylogger.Data.Count - 1 do
+  begin
+    klogdata := TKeylogger.Data.Items[C1];
+
+    for C2 := 0 to klogdata.Keystrokes.Count - 1 do
+    begin
+      kstrokes := klogdata.Keystrokes[C2];
+
+      if ((kstrokes.DateTime) >= ADateFrom) and
+         ((kstrokes.DateTime) <= ADateTo) and
+         (Length(kstrokes.Data) > 6) then
+        AddIndicator(2, kstrokes.DateTime, klogdata.PName + #13#10 + kstrokes.Caption + #13#10#13#10 + kstrokes.Data, $006EBBFF, apAtBottom, 0);
+    end;
+  end;
+}
+  for C1 := 0 to gridSitesTable.DataController.FilteredRecordCount - 1 do
+  begin
+    site := gridSitesTable.DataController.GetValue(gridSitesTable.DataController.FilteredRecordIndex[C1], 0);
+    datetim := gridSitesTable.DataController.GetValue(gridSitesTable.DataController.FilteredRecordIndex[C1], 1);
+    if Match(site, '*.*.*') then
+      AddIndicator(3, datetim, site, clMoneyGreen, apAtBottom, gridSitesTable.DataController.FilteredRecordIndex[C1]);
+  end;
+
+  for C1 := 0 to gridAppsTable.DataController.FilteredRecordCount - 1 do
+  begin
+    process := gridAppsTable.DataController.GetValue(gridAppsTable.DataController.FilteredRecordIndex[C1], 0);
+    caption := gridAppsTable.DataController.GetValue(gridAppsTable.DataController.FilteredRecordIndex[C1], 1);
+    datetim := gridAppsTable.DataController.GetValue(gridAppsTable.DataController.FilteredRecordIndex[C1], 2);
+
+    AddIndicator(4, datetim, process + #13#10#13#10 + caption, clSkyBlue, apAtBottom, gridAppsTable.DataController.FilteredRecordIndex[C1]);
+  end;
+
+  for C1 := 0 to gridPrintersTable.DataController.FilteredRecordCount - 1 do
+  begin
+    doc := gridPrintersTable.DataController.GetValue(gridPrintersTable.DataController.FilteredRecordIndex[C1], 0);
+    pages := gridPrintersTable.DataController.GetValue(gridPrintersTable.DataController.FilteredRecordIndex[C1], 1);
+    printer := gridPrintersTable.DataController.GetValue(gridPrintersTable.DataController.FilteredRecordIndex[C1], 2);
+    datetim := gridPrintersTable.DataController.GetValue(gridPrintersTable.DataController.FilteredRecordIndex[C1], 3);
+
+    AddIndicator(5, datetim, Format('Document name: %s', [doc]) + #13#10 + Format('Pages: %d', [pages]) + #13#10 + Format('Printer: %s', [printer]), clSilver, apOnTop, gridPrintersTable.DataController.FilteredRecordIndex[C1]);
+  end;
+  Timeline.TimeLineIndicators.EndUpdate;
+
+  SetupTimelineFirstEvent;
+end;
+
+procedure TfrmMain.SetupTimelineFirstEvent;
+//
+// Setup timeline range to start from first event
+//
+var
+  C1    : Integer;
+  lowest: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  lowest := -1;
+  for C1 := 0 to Timeline.TimeLineIndicators.Count - 1 do
+  begin
+    if lowest = -1 then
+      lowest := 0;
+
+    if Timeline.TimeLineIndicators[C1].Position < Timeline.TimeLineIndicators[lowest].Position then
+      lowest := C1;
+  end;
+
+  if lowest <> -1 then
+  begin
+    Timeline.SetTimeLineRange(IncMinute(Timeline.TimeLineIndicators[lowest].Position, -10), Timeline.Range.MaximumRange);
+    TimelineTrackbar.Position := 1;
+    TimelineTrackbar.Position := 0;
+  end;
+end;
+
+procedure TfrmMain.MailerSendDone(Sender: TObject; SenderThread: TObject; const ASuccess: Boolean);
+//
+// After report is sent
+//
+var
+  thread: TMailSenderThread;
+  C1    : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if Assigned(SenderThread) then
+  begin
+    thread := SenderThread as TMailSenderThread;
+
+    if thread.SMTPClient.EmailFiles.Count > 0 then
+      for C1 := 0 to thread.SMTPClient.EmailFiles.Count - 1 do
+        DeleteFile(thread.SMTPClient.EmailFiles[C1]);
+  end;
+
+  if (ASuccess) and
+     (DataModel.Settings.Report.ResetLogs) then
+    ResetLogs;
+end;
+
+procedure TfrmMain.miScreenshotsDeleteClick(Sender: TObject);
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to shlScreenshots.InnerListView.Items.Count - 1 do
+    if (shlScreenshots.InnerListView.Items[C1].Selected) and
+       (not shlScreenshots.InnerListView.Folders[C1].IsFolder) then
+      DeleteFile(shlScreenshots.InnerListView.Folders[C1].PathName);
+end;
+
+procedure TfrmMain.miScreenshotsOpenClick(Sender: TObject);
+var
+  C1: Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  for C1 := 0 to shlScreenshots.InnerListView.Items.Count - 1 do
+    if (shlScreenshots.InnerListView.Items[C1].Selected) and
+       (not shlScreenshots.InnerListView.Folders[C1].IsFolder) then
+      ShellOpen(shlScreenshots.InnerListView.Folders[C1].PathName);
+end;
+
+procedure TfrmMain.miSitesDeleteClick(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if gridSitesTable.DataController.FocusedRecordIndex <> -1 then
+  begin
+    gridSitesTable.DataController.BeginFullUpdate;
+    gridSitesTable.DataController.DeleteRecord(gridSitesTable.DataController.FocusedRecordIndex);
+    gridSitesTable.DataController.EndFullUpdate;
+  end;
+end;
+
+procedure TfrmMain.miSitesIgnoreClick(Sender: TObject);
+var
+  res : Integer;
+  item: String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if gridSitesTable.DataController.FocusedRecordIndex <> -1 then
+  begin
+    res := TfrmIgnoreItemAdd.RunModal(item, gridSitesTable.DataController.GetValue(gridSitesTable.DataController.FocusedRecordIndex, 0));
+    if res <> -1 then
+    begin
+      if res = mrOk then
+        DataModel.AddWebsiteToIgnoreList(item);
+      FreeAndNil(frmIgnoreItemAdd);
+    end;
+  end;
+end;
+
+procedure TfrmMain.miSitesOpenClick(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if gridSitesTable.DataController.FocusedRecordIndex <> -1 then
+    ShellOpen(gridSitesTable.DataController.GetValue(gridSitesTable.DataController.FocusedRecordIndex, 0));
+end;
+
+procedure TfrmMain.ClearDataController(const ADataController: TcxGridDataController);
+//
+// Clear specified data controller
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  ADataController.BeginFullUpdate;
+  ADataController.RecordCount := 0;
+  ADataController.EndFullUpdate;
+end;
+
+procedure TfrmMain.ResetLogs;
+var
+  files   : TStringList;
+  filename: String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  // screenshots
+  files := TStringList.Create;
+  EnumerateFiles(DataModel.ScreenshotsPath, '*.jpg', FALSE, files);
+  for filename in files do
+    DeleteFile(filename);
+  files.Free;
+
+  // keylogger
+  TKeylogger.FlushData;
+  ClearDataController(gridKeyloggerTable.DataController);
+  UpdateKeylogData;
+  ShowKeylogData;
+
+  // sites
+  ClearDataController(gridSitesTable.DataController);
+
+  // apps
+  ClearDataController(gridAppsTable.DataController);
+
+  // printers
+  ClearDataController(gridPrintersTable.DataController);
+
+  // clipboard
+  ClearDataController(gridClipboardTable.DataController);
+
+  UpdateHomeCaptions;
+end;
+
+procedure TfrmMain.SaveKeylog;
+var
+  C1, C2  : Integer;
+  kdata   : TKeylogger.TKeyloggerData;
+  kstrokes: TKeylogger.TKeystrokes;
+  fs      : TFileStream;
+  szo     : Integer;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  fs := TFileStream.Create(DataModel.SelfPath + 'log_keys.dat', fmCreate);
+  try
+    fs.Write(TKeylogger.Data.Count, SizeOf(TKeylogger.Data.Count));
+    fs.Write(TKeylogger.NextId, SizeOf(TKeylogger.NextId));
+    for C1 := 0 to TKeylogger.Data.Count - 1 do
+    begin
+      kdata := TKeylogger.Data[C1];
+      fs.Write(kdata.Id, SizeOf(kdata.Id));
+      fs.Write(kdata.PID, SizeOf(kdata.PID));
+      szo := Length(kdata.PName) * SizeOf(Char);
+      fs.Write(szo, SizeOf(szo));
+      fs.Write(kdata.PName[1], szo);
+      fs.Write(kdata.DateTime, SizeOf(kdata.DateTime));
+      fs.Write(kdata.Keystrokes.Count, SizeOf(kdata.Keystrokes.Count));
+      for C2 := 0 to kdata.Keystrokes.Count - 1 do
+      begin
+        kstrokes := kdata.Keystrokes[C2];
+        fs.Write(kstrokes.WindowHandle, SizeOf(kstrokes.WindowHandle));
+        szo := Length(kstrokes.Caption) * SizeOf(Char);
+        fs.Write(szo, SizeOf(szo));
+        fs.Write(kstrokes.Caption[1], szo);
+        fs.Write(kstrokes.DateTime, SizeOf(kstrokes.DateTime));
+        szo := Length(kstrokes.Data) * SizeOf(Char);
+        fs.Write(szo, SizeOf(szo));
+        fs.Write(kstrokes.Data[1], szo);
+      end;
+    end;
+  finally
+    fs.Free;
+  end;
+end;
+
+procedure TfrmMain.SaveLogs;
+
+  procedure SaveFile(const ADataController: TcxGridDataController; const AFile: String);
+  var
+    fs: TFileStream;
+  begin
+    fs := TFileStream.Create(AFile, fmCreate);
+    try
+      ADataController.SaveToStream(fs);
+    finally
+      fs.Free;
+    end;
+  end;
+
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  SaveKeylog;
+  SaveFile(gridSitesTable.DataController, DataModel.SelfPath + 'log_web.dat');
+  SaveFile(gridAppsTable.DataController, DataModel.SelfPath + 'log_apps.dat');
+  SaveFile(gridPrintersTable.DataController, DataModel.SelfPath + 'log_printers.dat');
+  SaveFile(gridClipboardTable.DataController, DataModel.SelfPath + 'log_clipboard.dat');
+  SaveFile(gridFilesTable.DataController, DataModel.SelfPath + 'log_files.dat');
+end;
+
+procedure TfrmMain.LoadKeylog;
+var
+  fs      : TFileStream;
+  C1, C2  : Integer;
+  kdata   : TKeylogger.TKeyloggerData;
+  kstrokes: TKeylogger.TKeystrokes;
+  dcount  : Integer;
+  kcount  : Integer;
+  szo     : Integer;
+  nextid  : DWORD;
+begin
+  if FileExists(DataModel.SelfPath + 'log_keys.dat') then
+  begin
+    TKeylogger.Data.Clear;
+    fs := TFileStream.Create(DataModel.SelfPath + 'log_keys.dat', fmOpenRead);
+    try
+      if (fs.Read(dcount, SizeOf(dcount)) <> 0) and
+         (fs.Read(nextid, SizeOf(nextid)) <> 0) then
+      begin
+        TKeylogger.NextId := nextid;
+
+        for C1 := 0 to dcount - 1 do
+        begin
+          kdata.Keystrokes := TList<TKeylogger.TKeystrokes>.Create;
+          fs.Read(kdata.Id, SizeOf(kdata.Id));
+          fs.Read(kdata.PID, SizeOf(kdata.PID));
+          fs.Read(szo, SizeOf(szo));
+          SetLength(kdata.PName, szo div SizeOf(Char));
+          fs.Read(kdata.PName[1], szo);
+          fs.Read(kdata.DateTime, SizeOf(kdata.DateTime));
+          fs.Read(kcount, SizeOf(kcount));
+          for C2 := 0 to kcount - 1 do
+          begin
+            fs.Read(kstrokes.WindowHandle, SizeOf(kstrokes.WindowHandle));
+            fs.Read(szo, SizeOf(szo));
+            SetLength(kstrokes.Caption, szo div SizeOf(Char));
+            fs.Read(kstrokes.Caption[1], szo);
+            fs.Read(kstrokes.DateTime, SizeOf(kstrokes.DateTime));
+            fs.Read(szo, SizeOf(szo));
+            SetLength(kstrokes.Data, szo div SizeOf(Char));
+            fs.Read(kstrokes.Data[1], szo);
+            kdata.Keystrokes.Add(kstrokes);
+          end;
+
+          TKeylogger.Data.Add(kdata);
+        end;
+      end;
+    finally
+      fs.Free;
+    end;
+    UpdateKeylogData;
+  end;
+end;
+
+procedure TfrmMain.LoadLogs;
+
+  procedure LoadFile(const ADataController: TcxGridDataController; const AFile: String);
+  var
+    fs: TFileStream;
+  begin
+    if FileExists(AFile) then
+    begin
+      fs := TFileStream.Create(AFile, fmOpenRead);
+      try
+        ADataController.LoadFromStream(fs);
+      finally
+        fs.Free;
+      end;
+    end;
+  end;
+
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  LoadKeylog;
+  LoadFile(gridSitesTable.DataController, DataModel.SelfPath + 'log_web.dat');
+  LoadFile(gridAppsTable.DataController, DataModel.SelfPath + 'log_apps.dat');
+  LoadFile(gridPrintersTable.DataController, DataModel.SelfPath + 'log_printers.dat');
+  LoadFile(gridClipboardTable.DataController, DataModel.SelfPath + 'log_clipboard.dat');
+  LoadFile(gridFilesTable.DataController, DataModel.SelfPath + 'log_files.dat');
+end;
+
+procedure TfrmMain.ClipboardChange(Sender: TObject);
+var
+  recid: Integer;
+  pid  : DWORD;
+  pname: String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if Clipboard.AsText <> '' then
+  begin
+    GetWindowThreadProcessId(GetForegroundWindow, pid);
+    pname := GetProcessName(pid);
+
+    gridClipboardTable.DataController.BeginFullUpdate;
+    try
+      recid := gridClipboardTable.DataController.AppendRecord;
+      gridClipboardTable.DataController.SetValue(recid, 0, pname);
+      gridClipboardTable.DataController.SetValue(recid, 1, Now);
+      gridClipboardTable.DataController.SetValue(recid, 2, Clipboard.AsText);
+    finally
+      gridClipboardTable.DataController.EndFullUpdate;
+      Inc(DataModel.Session.ClipboardLogged);
+    end;
+  end;
+end;
+
+procedure TfrmMain.gridClipboardTableFocusedRecordChanged(Sender: TcxCustomGridTableView; APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if Assigned(AFocusedRecord) then
+    memoClipboard.Text := AFocusedRecord.Values[2];
+end;
+
+procedure TfrmMain.ShellChangeNotifyCreate(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('CREATE', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyDelete(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('DELETE', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyDriveAdd(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('DRIVE ADD', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyDriveRemoved(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('DRIVE REMOVE', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyMediaInserted(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('MEDIA INSERTED', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyMediaRemoved(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('MEDIA REMOVED', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyMkDir(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('NEW FOLDER', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyRenameFolder(Sender: TObject; Flags: Cardinal; Path1, Path2: string);
+begin
+  AddFilesAction('RENAME FOLDER', Format('%s -> %s', [Path1, Path2]), Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyRenameItem(Sender: TObject; Flags: Cardinal; Path1, Path2: string);
+begin
+  AddFilesAction('RENAME ITEM', Format('%s -> %s', [Path1, Path2]), Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyRmDir(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('DELETE FOLDER', Path1, Now);
+end;
+
+procedure TfrmMain.ShellChangeNotifyUpdateItem(Sender: TObject; Flags: Cardinal; Path1: string);
+begin
+  AddFilesAction('FILE CHANGED', Path1, Now);
+end;
+
+procedure TfrmMain.AddFilesAction(const AAction, APath: String; const ADateTime: TDateTime);
+//
+// Adds file monitoring action to files table
+//
+var
+  recid     : Integer;
+  lastpath  : String;
+  lastaction: String;
+  ext       : String;
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  if (not DataModel.MatchesFileIgnoreList(APath)) and
+     (APath <> '') then
+  begin
+    ext := LowerCase(ExtractFileExt(APath));
+
+    if (ext <> '.tmp') and
+       (ext <> '.lnk') and
+       (ext <> '.ink') then
+    begin
+      lastaction := '';
+      lastpath := '';
+      if gridFilesTable.DataController.RecordCount > 0 then
+      begin
+        lastaction := gridFilesTable.DataController.GetValue(gridFilesTable.DataController.RecordCount - 1, 0);
+        lastpath := gridFilesTable.DataController.GetValue(gridFilesTable.DataController.RecordCount - 1, 1);
+      end;
+
+      if (APath <> lastpath) or
+         (AAction <> lastaction) then
+      begin
+        gridFilesTable.DataController.BeginFullUpdate;
+        try
+          recid := gridFilesTable.DataController.AppendRecord;
+          gridFilesTable.DataController.SetValue(recid, 0, AAction);
+          gridFilesTable.DataController.SetValue(recid, 1, APath);
+          gridFilesTable.DataController.SetValue(recid, 2, ADateTime);
+        finally
+          gridFilesTable.DataController.EndFullUpdate;
+          Inc(DataModel.Session.FilesLogged);
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.ShellChangeNotifyEndSessionQuery(Sender: TObject; var CanEndSession: Boolean);
+//
+// Close gecko if end session is detected
+//
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  CanEndSession := TRUE;
+  CloseGecko(FALSE);
+end;
+
+procedure TfrmMain.btRootFolderClick(Sender: TObject);
+begin
+  {$IFDEF DEBUG} Debug(ModuleByLevel, ProcByLevel); {$ENDIF}
+
+  shlScreenshots.Root.CustomPath := DataModel.ScreenshotsPath;
+end;
+
+end.

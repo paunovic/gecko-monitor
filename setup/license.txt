@@ -1,0 +1,5 @@
+Gecko Monitor is provided as a tool for monitoring your own computer. Please observe the laws in your state/country before using Gecko Monitor and use the software responsibly. We will not be held responsible for any misuse of the software.
+
+Gecko Monitor is the intellectual property of 'Gecko Monitor' and is protected by copyright laws. Please do not attempt to distribute or copy Gecko Monitor without prior permission.
+
+By acknowledging this EULA, you agree with the above text, and that you will use Gecko Monitor in accordance with the laws in your area.

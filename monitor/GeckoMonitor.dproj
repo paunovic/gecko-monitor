@@ -1,0 +1,421 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{9CEC808A-55A1-4E98-A3D4-9F4D20BF629F}</ProjectGuid>
+			<ProjectVersion>13.4</ProjectVersion>
+			<FrameworkType>VCL</FrameworkType>
+			<MainSource>GeckoMonitor.dpr</MainSource>
+			<Base>True</Base>
+			<Config Condition="'$(Config)'==''">Release</Config>
+			<Platform Condition="'$(Platform)'==''">Win32</Platform>
+			<TargetedPlatforms>3</TargetedPlatforms>
+			<AppType>Application</AppType>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+			<Base_Win64>true</Base_Win64>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+			<Base_Win32>true</Base_Win32>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win64)'!=''">
+			<Cfg_1_Win64>true</Cfg_1_Win64>
+			<CfgParent>Cfg_1</CfgParent>
+			<Cfg_1>true</Cfg_1>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+			<Cfg_1_Win32>true</Cfg_1_Win32>
+			<CfgParent>Cfg_1</CfgParent>
+			<Cfg_1>true</Cfg_1>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
+			<Cfg_2_Win64>true</Cfg_2_Win64>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+			<Cfg_2_Win32>true</Cfg_2_Win32>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<Manifest_File>_resources\UAC.manifest</Manifest_File>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Locale>2057</VerInfo_Locale>
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<Icon_MainIcon>_resources\Icon\Icon.ico</Icon_MainIcon>
+			<DCC_UsePackage>DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;dbxcds;dsnap;IndyCore;CloudService;JvDB;IPIndyImpl;bindcompfmx;dbrtl;bindcomp;inetdb;JvPluginSystem;xmlrtl;ibxpress;soaprtl;bindengine;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;fmx;JvDlgs;IndySystem;DataSnapClient;DataSnapProviderClient;DBXOracleDriver;JvCore;fmxase;inetdbxpress;rtl;DbxClientDriver;JvSystem;JvControls;IndyProtocols;DBXMySQLDriver;JvPageComps;JvStdCtrls;JvCustom;fmxobj;fmxdae;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_UsePackage>cxLibraryRS16;dxSkinSevenRS16;dxPsPrVwAdvRS16;dxSkinSummer2008RS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;cxPageControlRS16;dxSkinVS2010RS16;vclimg;dxSkinDevExpressStyleRS16;dxSkinWhiteprintRS16;dxComnRS16;vcldb;dxSkinBlackRS16;dxBarExtDBItemsRS16;dxSkinXmas2008BlueRS16;dxSkinOffice2007BlueRS16;dxSkinOffice2007GreenRS16;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;dxBarExtItemsRS16;dxPSLnksRS16;JclDeveloperTools;dxPSTeeChartRS16;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxSkinSharpRS16;dxSkinOffice2007BlackRS16;dxorgcRS16;dxSkinBlueprintRS16;dxPScxExtCommonRS16;dxNavBarRS16;DBXOdbcDriver;dxdbtrRS16;dxSkinFoggyRS16;dxPScxSSLnkRS16;dxSkinDarkSideRS16;dxSkinscxPCPainterRS16;dxPSdxDBTVLnkRS16;vclactnband;bindcompvcl;dxPScxSchedulerLnkRS16;Jcl;vclie;dxSkinSilverRS16;dsnapcon;dcldxSkinsCoreRS16;vclx;dxSkinLilianRS16;dxSkinValentineRS16;dxFlowChartRS16;dxGDIPlusRS16;dxSkinSharpPlusRS16;dxdborRS16;dxPScxVGridLnkRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;cxSpreadSheetRS16;dxSkinCoffeeRS16;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;dxSkinOffice2007SilverRS16;dxSkinsdxRibbonPainterRS16;vcldsnap;dxSkinBlueRS16;DBXDb2Driver;dxSkinDarkRoomRS16;dxSkinscxSchedulerPainterRS16;vcl;dxSkinDevExpressDarkStyleRS16;DBXMSSQLDriver;webdsnap;dxSkinsdxDLPainterRS16;dxSkinTheAsphaltWorldRS16;dxSkinOffice2010BlackRS16;dxSkinMoneyTwinsRS16;adortl;dxSkinPumpkinRS16;dxSkinHighContrastRS16;dxSkiniMaginaryRS16;dxPSdxDBOCLnkRS16;dxSkinLondonLiquidSkyRS16;dxSkinsdxBarPainterRS16;Tee;JclContainers;dxSkinGlassOceansRS16;dxSkinLiquidSkyRS16;dxSkinsCoreRS16;dxmdsRS16;cxGridRS16;dxPScxCommonRS16;dxPSPrVwRibbonRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;dxSkinSevenClassicRS16;cxSchedulerRS16;vcltouch;dxSkinOffice2010SilverRS16;websnap;dxSkinOffice2007PinkRS16;VclSmp;dxSkinSpringTimeRS16;dxTabbedMDIRS16;DataSnapConnectors;dxSkinStardustRS16;dxPSdxOCLnkRS16;dxSkinOffice2010BlueRS16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;dxPScxPCProdRS16;dxSkinCaramelRS16;dxSkinMcSkinRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<DCC_UsePackage>JvGlobus;JvMM;cxLibraryRS16;JvManagedThreads;PGPTLSBBoxD16;dxSkinSevenRS16;JvCrypt;dxPsPrVwAdvRS16;dxSkinSummer2008RS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;acntDelphiXE2_R;JvNet;cxPageControlRS16;JvDotNetCtrls;dxSkinVS2010RS16;vclimg;dxSkinDevExpressStyleRS16;EDIBBoxD16;fmi;dxSkinWhiteprintRS16;dxComnRS16;JvXPCtrls;vcldb;dxSkinBlackRS16;dxBarExtDBItemsRS16;ZIPBBoxD16;dxSkinXmas2008BlueRS16;dxSkinOffice2007BlueRS16;HTTPBBoxSrvD16;dxSkinOffice2007GreenRS16;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;tmsexdxe2;dxPSDBTeeChartRS16;JvRuntimeDesign;SSLBBoxCliD16;dxBarExtItemsRS16;dxPSLnksRS16;JclDeveloperTools;PGPMIMEBBoxD16;dxPSTeeChartRS16;dxPSdxLCLnkRS16;LDAPBBoxD16;cxVerticalGridRS16;dxSkinSharpRS16;dxSkinOffice2007BlackRS16;dxorgcRS16;dxSkinBlueprintRS16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;OverbyteIcsDXe2Run;DBXOdbcDriver;PKIBBoxD16;JvCmp;dxdbtrRS16;dxSkinFoggyRS16;JvTimeFramework;dxPScxSSLnkRS16;dxSkinDarkSideRS16;intrawebdb_120_160;FTPSBBoxSrvD16;SFTPBBoxCliD16;dxSkinscxPCPainterRS16;dxPSdxDBTVLnkRS16;vclactnband;FMXTee;DAVBBoxSrvD16;PGPBBoxD16;bindcompvcl;dxPScxSchedulerLnkRS16;Jcl;vclie;MIMEBBoxD16;SMIMEBBoxD16;PasLibVlcPlayer;dxSkinSilverRS16;PGPSSHBBoxD16;BaseBBoxD16;dsnapcon;JvPascalInterpreter;CoolTrayIcon_D140;dcldxSkinsCoreRS16;vclx;dxSkinLilianRS16;dxSkinValentineRS16;dxFlowChartRS16;dxGDIPlusRS16;JvBDE;dxSkinSharpPlusRS16;dxdborRS16;dxPScxVGridLnkRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;cxSpreadSheetRS16;dxSkinCoffeeRS16;Rave100VCL;vclib;inetdbbde;CloudBBoxD16;OfficeBBoxD16;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;PKISSHBBoxD16;FTPSBBoxCliD16;dxSkinOffice2007SilverRS16;dxSkinsdxRibbonPainterRS16;vcldsnap;dxSkinBlueRS16;DBXDb2Driver;Intraweb_120_160;vclribbon;HTTPBBoxCliD16;dxSkinDarkRoomRS16;dxSkinscxSchedulerPainterRS16;vcl;dxSkinDevExpressDarkStyleRS16;DBXMSSQLDriver;CodeSiteExpressPkg;DAVBBoxCliD16;JvAppFrm;tmsdxe2;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxSkinTheAsphaltWorldRS16;dxSkinOffice2010BlackRS16;dxSkinMoneyTwinsRS16;XMLBBoxD16;adortl;SSHBBoxCliD16;JvDocking;dxSkinPumpkinRS16;JvWizards;SSHBBoxSrvD16;dxSkinHighContrastRS16;XMLBBoxSecD16;JvBands;dxSkiniMaginaryRS16;dxPSdxDBOCLnkRS16;dxSkinLondonLiquidSkyRS16;dxSkinsdxBarPainterRS16;DsgnBBoxD16;Tee;JclContainers;dxSkinGlassOceansRS16;dxSkinLiquidSkyRS16;dxSkinsCoreRS16;svnui;PDFBBoxD16;cxPivotGridChartRS16;dxmdsRS16;dxSpellCheckerRS16;HotKeyManager_D6plus;cxGridRS16;dxPScxCommonRS16;dxPSPrVwRibbonRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;JvJans;JvPrintPreview;dxSkinSevenClassicRS16;MailBBoxD16;SSLBBoxSrvD16;cxSchedulerRS16;tmsxlsdxe2;vcltouch;dxSkinOffice2010SilverRS16;websnap;dxSkinOffice2007PinkRS16;SFTPBBoxSrvD16;VclSmp;dxSkinSpringTimeRS16;dxTabbedMDIRS16;DataSnapConnectors;dxSkinStardustRS16;PGPLDAPBBoxD16;dxPSdxOCLnkRS16;dxSkinOffice2010BlueRS16;PKIPDFBBoxD16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;dxPScxPCProdRS16;tmswizdxe2;svn;dxSkinCaramelRS16;bdertl;dxSkinMcSkinRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+			<DCC_RemoteDebug>true</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+			<VerInfo_Locale>1033</VerInfo_Locale>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_MapFile>3</DCC_MapFile>
+			<DCC_Define>madExcept;$(DCC_Define)</DCC_Define>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=Gecko Monitor;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=Made by Marko Paunovic (paunovic@gmail.com)</VerInfo_Keys>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_RemoteDebug>false</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+			<VerInfo_Locale>1033</VerInfo_Locale>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+			<DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
+			<DCC_DebugInformation>true</DCC_DebugInformation>
+			<DCC_MapFile>3</DCC_MapFile>
+			<DCC_Define>madExcept;$(DCC_Define)</DCC_Define>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="$(MainSource)">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="uCommon.pas"/>
+			<DCCReference Include="uResources.pas"/>
+			<DCCReference Include="modules\sniffer\uSniffer.pas"/>
+			<DCCReference Include="modules\keylogger\uKeylogger.pas"/>
+			<DCCReference Include="modules\site_tracker\uSiteTracker.pas"/>
+			<DCCReference Include="modules\screenshoting\uScreenshotter.pas"/>
+			<DCCReference Include="modules\app_tracker\uWindowFocusNotifier.pas"/>
+			<DCCReference Include="modules\printers\uPrintersMonitor.pas"/>
+			<DCCReference Include="modules\servicemanager\uServiceManager.pas"/>
+			<DCCReference Include="modules\trialunlocker\uSerialValidator.pas"/>
+			<DCCReference Include="modules\trialunlocker\uTrialUnlocker.pas"/>
+			<DCCReference Include="modules\encryption\uEncryption.pas"/>
+			<DCCReference Include="modules\startup\uStartup.pas"/>
+			<DCCReference Include="modules\mail_sender\uMailSender.pas"/>
+			<DCCReference Include="modules\clipboard_monitor\uClipboardMonitor.pas"/>
+			<DCCReference Include="uMainForm.pas">
+				<Form>frmMain</Form>
+			</DCCReference>
+			<DCCReference Include="uDataModel.pas">
+				<Form>DataModel</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="uSettingsForm.pas">
+				<Form>frmSettings</Form>
+			</DCCReference>
+			<DCCReference Include="uTrialRegisterForm.pas">
+				<Form>frmTrialRegister</Form>
+			</DCCReference>
+			<DCCReference Include="uFirstStartForm.pas">
+				<Form>frmFirstStart</Form>
+			</DCCReference>
+			<DCCReference Include="uIgnoreItemAdd.pas">
+				<Form>frmIgnoreItemAdd</Form>
+			</DCCReference>
+			<DCCReference Include="uUnlockForm.pas">
+				<Form>frmUnlock</Form>
+			</DCCReference>
+			<DCCReference Include="uChangePasswordForm.pas">
+				<Form>frmChangePassword</Form>
+			</DCCReference>
+			<DCCReference Include="uSaveReportForm.pas">
+				<Form>frmSaveReport</Form>
+			</DCCReference>
+			<DCCReference Include="modules\instance_controller\uInstanceController.pas"/>
+			<RcItem Include="..\material\graphics\tab-click.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>TabBackgroundFocused</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\tab-normal.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>TabBackgroundNormal</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\content-area.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>BackgroundPage</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\applications1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackApplications</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\applications2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteApplications</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\downloads1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackFiles</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\downloads2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteFiles</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\home1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackHome</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\home2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteHome</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\keystrokes1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackKeylogger</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\keystrokes2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteKeylogger</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\printer1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackPrinters</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\printer2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhitePrinters</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\screenshots1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackScreenshots</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\screenshots2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteScreenshots</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\timeline1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackTimeline</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\timeline2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteTimeline</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\websites1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackInternet</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\websites2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteInternet</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\gecko\background2-noborders.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>BackgroundMain</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\gecko\geckohome.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>BackgroundHome</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\gecko\background-firstform.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>BackgroundFirstForm</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\gecko\background-trialpopup.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>BackgroundTrial</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\gecko\background-unlock.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>BackgroundUnlock</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\clipboard1.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphBlackClipboard</ResourceId>
+			</RcItem>
+			<RcItem Include="..\material\graphics\clipboard2.png">
+				<ResourceType>RCDATA</ResourceType>
+				<ResourceId>GlyphWhiteClipboard</ResourceId>
+			</RcItem>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Source>
+						<Source Name="MainSource">GeckoMonitor.dpr</Source>
+					</Source>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">2057</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+					</Excluded_Packages>
+				</Delphi.Personality>
+				<Deployment>
+					<DeployFile LocalName="Win32\Debug\GeckoMonitor.exe" Configuration="Debug" Class="ProjectOutput">
+						<Platform Name="Win32"/>
+					</DeployFile>
+					<DeployFile LocalName="Win32\Debug\GeckoMonitor.rsm" Configuration="Debug" Class="DebugSymbols">
+						<Platform Name="Win32">
+							<RemoteName>GeckoMonitor.rsm</RemoteName>
+						</Platform>
+					</DeployFile>
+					<DeployClass Name="ProjectOutput" Required="true">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyPackage" Required="true">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+							<Extensions>.dylib</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+							<Extensions>.bpl</Extensions>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyModule">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+							<Extensions>.dylib</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+							<Extensions>.dll;.bpl</Extensions>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="ProjectOSXInfoPList">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="File">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>0</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DebugSymbols">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyFramework">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+							<Extensions>.framework</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="AdditionalDebugSymbols">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="ProjectOSXResource">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\Resources</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
+				</Deployment>
+				<Platforms>
+					<Platform value="Win64">True</Platform>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+				<ModelSupport>False</ModelSupport>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+		<Import Condition="Exists('$(MSBuildProjectName).deployproj')" Project="$(MSBuildProjectName).deployproj"/>
+	</Project>
